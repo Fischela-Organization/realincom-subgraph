@@ -1,0 +1,53 @@
+specVersion: 0.0.1
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: RealIncomAuction
+    network: mumbai
+    source:
+      address: "0x5d3648C8088cD3951F71Ce2c31ffaba43ba1aBFB"
+      abi: RealIncomAuction
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - AccessControlContractUpdated
+        - AuctionBalanceWithdrawn
+        - AuctionCancelled
+        - AuctionCreated
+        - AuctionEndTimeModified
+        - AuctionResulted
+        - AuctionStartTimeModified
+        - BidPlaced
+        - NFTContractUpdated
+        - OwnershipTransferred
+        - ValueSent
+      abis:
+        - name: RealIncomAuction
+          file: ./abis/RealIncomAuction.json
+      eventHandlers:
+        - event: AccessControlContractUpdated(indexed address,indexed address)
+          handler: handleAccessControlContractUpdated
+        - event: AuctionBalanceWithdrawn(address,address,uint256)
+          handler: handleAuctionBalanceWithdrawn
+        - event: AuctionCancelled(uint256,uint256,address)
+          handler: handleAuctionCancelled
+        - event: AuctionCreated(uint256,uint256,uint256,uint256,address)
+          handler: handleAuctionCreated
+        - event: AuctionEndTimeModified(uint256,uint256,address,uint256)
+          handler: handleAuctionEndTimeModified
+        - event: AuctionResulted(address,address,uint256,uint256)
+          handler: handleAuctionResulted
+        - event: AuctionStartTimeModified(uint256,uint256,address,uint256)
+          handler: handleAuctionStartTimeModified
+        - event: BidPlaced(uint256,address,uint256)
+          handler: handleBidPlaced
+        - event: NFTContractUpdated(indexed address,indexed address)
+          handler: handleNFTContractUpdated
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: ValueSent(indexed address,indexed uint256)
+          handler: handleValueSent
+      file: ./src/real-incom-auction.ts
