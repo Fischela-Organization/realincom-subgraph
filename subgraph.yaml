@@ -51,3 +51,71 @@ dataSources:
         - event: ValueSent(indexed address,indexed uint256)
           handler: handleValueSent
       file: ./src/real-incom-auction.ts
+  - kind: ethereum
+    name: RealIncomNft
+    network: mumbai
+    source:
+      address: "0x2Cdb125180A315afd2926850b56616AdADBa840B"
+      abi: RealIncomNft
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - RealIncomNftAccessControlContractUpdated
+        - Approval
+        - ApprovalForAll
+        - NftMinted
+        - Transfer
+      abis:
+        - name: RealIncomNft
+          file: ./abis/RealIncomNft.json
+      eventHandlers:
+        - event: RealIncomNftAccessControlContractUpdated(indexed address,indexed address)
+          handler: handleRealIncomNftAccessControlContractUpdated
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: NftMinted(address,string,string,string,int256,uint256)
+          handler: handleNftMinted
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/real-incom-nft.ts
+  - kind: ethereum
+    name: VillageSquare
+    network: mumbai
+    source:
+      address: "0xf79DbBe121E52255aBdC884F7D3E47C8D1071ee5"
+      abi: VillageSquare
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - VillageSquareAccessControlContractUpdated
+        - AuctionContractUpdated
+        - Deposited
+        - DisputeReported
+        - DisputeResolved
+        - VillageSquareOwnershipTransferred
+        - Withdrawn
+      abis:
+        - name: VillageSquare
+          file: ./abis/VillageSquare.json
+      eventHandlers:
+        - event: VillageSquareAccessControlContractUpdated(address,address)
+          handler: handleVillageSquareAccessControlContractUpdated
+        - event: AuctionContractUpdated(address,address)
+          handler: handleAuctionContractUpdated
+        - event: Deposited(indexed address,uint256)
+          handler: handleDeposited
+        - event: DisputeReported(address,uint256,string,string,string)
+          handler: handleDisputeReported
+        - event: DisputeResolved(address,uint256,uint256)
+          handler: handleDisputeResolved
+        - event: VillageSquareOwnershipTransferred(indexed address,indexed address)
+          handler: handleVillageSquareOwnershipTransferred
+        - event: Withdrawn(indexed address,uint256)
+          handler: handleWithdrawn
+      file: ./src/village-square.ts

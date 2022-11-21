@@ -4,3 +4,84 @@ type ExampleEntity @entity {
   _accessController: Bytes! # address
   sender: Bytes! # address
 }
+type RealIncomNftAccessControlContractUpdated @entity {
+  id: ID!
+  accessController: Bytes! # address
+  innitiator: Bytes! # address
+}
+
+type Approval @entity {
+  id: ID!
+  owner: Bytes! # address
+  approved: Bytes! # address
+  tokenId: BigInt! # uint256
+}
+
+type ApprovalForAll @entity {
+  id: ID!
+  owner: Bytes! # address
+  operator: Bytes! # address
+  approved: Boolean! # bool
+}
+
+type NftMinted @entity {
+  id: ID!
+  owner: Bytes! # address
+  title: String! # string
+  description: String! # string
+  digiURI: String! # string
+  amount: BigInt! # int256
+  tokenId: BigInt! # uint256
+}
+
+type Transfer @entity {
+  id: ID!
+  from: Bytes! # address
+  to: Bytes! # address
+  tokenId: BigInt! # uint256
+}
+type VillageSquareAccessControlContractUpdated @entity {
+  id: ID!
+  _accessController: Bytes! # address
+  sender: Bytes! # address
+}
+
+type AuctionContractUpdated @entity {
+  id: ID!
+  _auctionContract: Bytes! # address
+  sender: Bytes! # address
+}
+
+type Deposited @entity {
+  id: ID!
+  payee: Bytes! # address
+  weiAmount: BigInt! # uint256
+}
+
+type DisputeReported @entity {
+  id: ID!
+  disputeReporter: Bytes! # address
+  auctionId: BigInt! # uint256
+  _message: String! # string
+  _email: String! # string
+  _phone: String! # string
+}
+
+type DisputeResolved @entity {
+  id: ID!
+  _fundReceiver: Bytes! # address
+  payment: BigInt! # uint256
+  disputeId: BigInt! # uint256
+}
+
+type VillageSquareOwnershipTransferred @entity {
+  id: ID!
+  previousOwner: Bytes! # address
+  newOwner: Bytes! # address
+}
+
+type Withdrawn @entity {
+  id: ID!
+  payee: Bytes! # address
+  weiAmount: BigInt! # uint256
+}

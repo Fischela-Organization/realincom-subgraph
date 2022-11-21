@@ -2,6 +2,12 @@
   "mumbai": {
     "RealIncomAuction": {
       "address": "0x5d3648C8088cD3951F71Ce2c31ffaba43ba1aBFB"
+    },
+    "RealIncomNft": {
+      "address": "0x2Cdb125180A315afd2926850b56616AdADBa840B"
+    },
+    "VillageSquare": {
+      "address": "0xf79DbBe121E52255aBdC884F7D3E47C8D1071ee5"
     }
   }
 }
