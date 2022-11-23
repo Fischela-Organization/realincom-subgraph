@@ -1,87 +1,40 @@
-type ExampleEntity @entity {
+
+type DigiSales @entity {
   id: ID!
-  count: BigInt!
-  _accessController: Bytes! # address
-  sender: Bytes! # address
-}
-type RealIncomNftAccessControlContractUpdated @entity {
-  id: ID!
-  accessController: Bytes! # address
-  innitiator: Bytes! # address
+  auctionId: ID
+  digi: Digi!
+  # isOnSale: Boolean #set isOnsale = true when OfferCreated, AuctionCreated is emitted, and isOnSale = false when OfferCancelled, OfferPurchased, AuctionCancelled, AuctionPurchased, AuctionResulted is called
+  amount: BigInt #can be reserved_price for auction or price for fixed
+  isOnSale: Boolean
+  startTime: BigInt
+  endTime: BigInt
+  duration: BigInt
+  buyer: User
+  seller: User
 }
 
-type Approval @entity {
+type Dispute @entity {
   id: ID!
-  owner: Bytes! # address
-  approved: Bytes! # address
-  tokenId: BigInt! # uint256
+  payee: User
+  disputeReporter: User
+  auctionId: ID
+  message: String
+  email: String
+  phone: String
 }
 
-type ApprovalForAll @entity {
+type Digi @entity {
   id: ID!
-  owner: Bytes! # address
-  operator: Bytes! # address
-  approved: Boolean! # bool
+  metadataURI: String!
+  baseURI: String
+  created: BigInt
+  ownerAddress: User!
+  creator: User!
 }
 
-type NftMinted @entity {
+type User @entity{
   id: ID!
-  owner: Bytes! # address
-  title: String! # string
-  description: String! # string
-  digiURI: String! # string
-  amount: BigInt! # int256
-  tokenId: BigInt! # uint256
-}
-
-type Transfer @entity {
-  id: ID!
-  from: Bytes! # address
-  to: Bytes! # address
-  tokenId: BigInt! # uint256
-}
-type VillageSquareAccessControlContractUpdated @entity {
-  id: ID!
-  _accessController: Bytes! # address
-  sender: Bytes! # address
-}
-
-type AuctionContractUpdated @entity {
-  id: ID!
-  _auctionContract: Bytes! # address
-  sender: Bytes! # address
-}
-
-type Deposited @entity {
-  id: ID!
-  payee: Bytes! # address
-  weiAmount: BigInt! # uint256
-}
-
-type DisputeReported @entity {
-  id: ID!
-  disputeReporter: Bytes! # address
-  auctionId: BigInt! # uint256
-  _message: String! # string
-  _email: String! # string
-  _phone: String! # string
-}
-
-type DisputeResolved @entity {
-  id: ID!
-  _fundReceiver: Bytes! # address
-  payment: BigInt! # uint256
-  disputeId: BigInt! # uint256
-}
-
-type VillageSquareOwnershipTransferred @entity {
-  id: ID!
-  previousOwner: Bytes! # address
-  newOwner: Bytes! # address
-}
-
-type Withdrawn @entity {
-  id: ID!
-  payee: Bytes! # address
-  weiAmount: BigInt! # uint256
+  digis: [Digi!] @derivedFrom(field: "ownerAddress")
+  disputes: [Dispute!] @derivedFrom(field: "disputeReporter")
+  created: [Digi!] @derivedFrom(field: "creator")
 }

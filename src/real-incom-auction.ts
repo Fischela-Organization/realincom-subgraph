@@ -13,7 +13,8 @@ import {
   OwnershipTransferred,
   ValueSent
 } from "../generated/RealIncomAuction/RealIncomAuction"
-import { ExampleEntity } from "../generated/schema"
+import { Digi, DigiSales, ExampleEntity } from "../generated/schema"
+
 
 export function handleAccessControlContractUpdated(
   event: AccessControlContractUpdated
@@ -68,11 +69,23 @@ export function handleAccessControlContractUpdated(
 
 export function handleAuctionBalanceWithdrawn(
   event: AuctionBalanceWithdrawn
-): void {}
+): void {
+
+
+}
 
 export function handleAuctionCancelled(event: AuctionCancelled): void {}
 
-export function handleAuctionCreated(event: AuctionCreated): void {}
+export function handleAuctionCreated(event: AuctionCreated): void {
+  const digi = new DigiSales(event.address + "-" + event.params.tokenId.toHex())
+  digi.amount = event.params.reservedPrice
+  digi.buyer = null
+  digi.endTime = event.params.endTime
+  digi.startTime = event.params.startTime
+  digi.seller = event.transaction.from.toHexString()
+  digi.digi = event.params.tokenId.toHex()
+  digi.save()
+}
 
 export function handleAuctionEndTimeModified(
   event: AuctionEndTimeModified

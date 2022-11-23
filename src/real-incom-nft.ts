@@ -3,14 +3,16 @@ import {
   Approval as ApprovalEvent,
   ApprovalForAll as ApprovalForAllEvent,
   NftMinted as NftMintedEvent,
-  Transfer as TransferEvent
+  Transfer as TransferEvent,
+  RealIncomNft
 } from "../generated/RealIncomNft/RealIncomNft"
 import {
   RealIncomNftAccessControlContractUpdated,
   Approval,
   ApprovalForAll,
   NftMinted,
-  Transfer
+  Transfer,
+  Digi
 } from "../generated/schema"
 
 export function handleRealIncomNftAccessControlContractUpdated(
@@ -58,11 +60,21 @@ export function handleNftMinted(event: NftMintedEvent): void {
 }
 
 export function handleTransfer(event: TransferEvent): void {
-  let entity = new Transfer(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity.from = event.params.from
-  entity.to = event.params.to
-  entity.tokenId = event.params.tokenId
-  entity.save()
+
+  let digi = Digi.load(event.params.tokenId.toHex())
+  if (!digi){
+    digi = new Digi(event.params.tokenId.toHex())
+    let nftContract = RealIncomNft.bind(event.address)
+    let tokenURI = nftContract.tokenURI(event.params.tokenId)
+    digi.metadataURI = tokenURI
+    digi.created = event.block.timestamp
+    digi.ownerAddress = event.params.to.toHexString()
+    digi.creator = event.params.to.toHexString()
+    digi.save()
+  }
+
+  if (digi){
+    digi.ownerAddress = event.params.to.toHexString()
+    digi.save()
+  }
 }
