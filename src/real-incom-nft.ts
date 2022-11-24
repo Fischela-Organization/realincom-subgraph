@@ -1,3 +1,4 @@
+import { BigInt } from "@graphprotocol/graph-ts"
 import {
   RealIncomNftAccessControlContractUpdated as RealIncomNftAccessControlContractUpdatedEvent,
   Approval as ApprovalEvent,
@@ -7,56 +8,40 @@ import {
   RealIncomNft
 } from "../generated/RealIncomNft/RealIncomNft"
 import {
-  RealIncomNftAccessControlContractUpdated,
-  Approval,
-  ApprovalForAll,
-  NftMinted,
-  Transfer,
-  Digi
+  Digi, User
 } from "../generated/schema"
 
 export function handleRealIncomNftAccessControlContractUpdated(
   event: RealIncomNftAccessControlContractUpdatedEvent
 ): void {
-  let entity = new RealIncomNftAccessControlContractUpdated(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity.accessController = event.params.accessController
-  entity.innitiator = event.params.innitiator
-  entity.save()
+  
 }
 
 export function handleApproval(event: ApprovalEvent): void {
-  let entity = new Approval(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity.owner = event.params.owner
-  entity.approved = event.params.approved
-  entity.tokenId = event.params.tokenId
-  entity.save()
+  
 }
 
 export function handleApprovalForAll(event: ApprovalForAllEvent): void {
-  let entity = new ApprovalForAll(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity.owner = event.params.owner
-  entity.operator = event.params.operator
-  entity.approved = event.params.approved
-  entity.save()
+  
 }
 
 export function handleNftMinted(event: NftMintedEvent): void {
-  let entity = new NftMinted(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+  let digi = Digi.load(
+    event.params.tokenId.toHex()
   )
-  entity.owner = event.params.owner
-  entity.title = event.params.title
-  entity.description = event.params.description
-  entity.digiURI = event.params.digiURI
-  entity.amount = event.params.amount
-  entity.tokenId = event.params.tokenId
-  entity.save()
+
+  if (digi){
+    digi.title = event.params.title
+    digi.description = event.params.description
+    digi.worth = event.params.amount.toString()
+    digi.save()
+  }
+  
+  let user = User.load(event.params.owner.toHexString())
+  if (user) {
+    user.networth += event.params.amount.toU64()
+    user.save()
+  }
 }
 
 export function handleTransfer(event: TransferEvent): void {
@@ -77,4 +62,12 @@ export function handleTransfer(event: TransferEvent): void {
     digi.ownerAddress = event.params.to.toHexString()
     digi.save()
   }
+
+  let user = User.load(event.params.to.toHexString())
+
+  if (!user){
+    user = new User(event.params.to.toHexString())
+    user.save()
+  }
+
 }

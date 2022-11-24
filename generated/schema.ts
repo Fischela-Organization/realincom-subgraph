@@ -11,7 +11,7 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
-export class DigiSales extends Entity {
+export class DigiSale extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -19,18 +19,18 @@ export class DigiSales extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save DigiSales entity without an ID");
+    assert(id != null, "Cannot save DigiSale entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type DigiSales must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type DigiSale must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("DigiSales", id.toString(), this);
+      store.set("DigiSale", id.toString(), this);
     }
   }
 
-  static load(id: string): DigiSales | null {
-    return changetype<DigiSales | null>(store.get("DigiSales", id));
+  static load(id: string): DigiSale | null {
+    return changetype<DigiSale | null>(store.get("DigiSale", id));
   }
 
   get id(): string {
@@ -68,21 +68,13 @@ export class DigiSales extends Entity {
     this.set("digi", Value.fromString(value));
   }
 
-  get amount(): BigInt | null {
+  get amount(): i32 {
     let value = this.get("amount");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
+    return value!.toI32();
   }
 
-  set amount(value: BigInt | null) {
-    if (!value) {
-      this.unset("amount");
-    } else {
-      this.set("amount", Value.fromBigInt(<BigInt>value));
-    }
+  set amount(value: i32) {
+    this.set("amount", Value.fromI32(value));
   }
 
   get isOnSale(): boolean {
@@ -312,6 +304,49 @@ export class Dispute extends Entity {
       this.set("phone", Value.fromString(<string>value));
     }
   }
+
+  get fundReceiver(): string | null {
+    let value = this.get("fundReceiver");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set fundReceiver(value: string | null) {
+    if (!value) {
+      this.unset("fundReceiver");
+    } else {
+      this.set("fundReceiver", Value.fromString(<string>value));
+    }
+  }
+
+  get payment(): i32 {
+    let value = this.get("payment");
+    return value!.toI32();
+  }
+
+  set payment(value: i32) {
+    this.set("payment", Value.fromI32(value));
+  }
+
+  get disputeId(): string | null {
+    let value = this.get("disputeId");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set disputeId(value: string | null) {
+    if (!value) {
+      this.unset("disputeId");
+    } else {
+      this.set("disputeId", Value.fromString(<string>value));
+    }
+  }
 }
 
 export class Digi extends Entity {
@@ -405,6 +440,49 @@ export class Digi extends Entity {
   set creator(value: string) {
     this.set("creator", Value.fromString(value));
   }
+
+  get title(): string | null {
+    let value = this.get("title");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set title(value: string | null) {
+    if (!value) {
+      this.unset("title");
+    } else {
+      this.set("title", Value.fromString(<string>value));
+    }
+  }
+
+  get description(): string | null {
+    let value = this.get("description");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set description(value: string | null) {
+    if (!value) {
+      this.unset("description");
+    } else {
+      this.set("description", Value.fromString(<string>value));
+    }
+  }
+
+  get worth(): i32 {
+    let value = this.get("worth");
+    return value!.toI32();
+  }
+
+  set worth(value: i32) {
+    this.set("worth", Value.fromI32(value));
+  }
 }
 
 export class User extends Entity {
@@ -436,6 +514,15 @@ export class User extends Entity {
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
+  }
+
+  get networth(): i32 {
+    let value = this.get("networth");
+    return value!.toI32();
+  }
+
+  set networth(value: i32) {
+    this.set("networth", Value.fromI32(value));
   }
 
   get digis(): Array<string> | null {

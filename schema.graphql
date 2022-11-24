@@ -1,10 +1,10 @@
 
-type DigiSales @entity {
+type DigiSale @entity {
   id: ID!
   auctionId: ID
   digi: Digi!
   # isOnSale: Boolean #set isOnsale = true when OfferCreated, AuctionCreated is emitted, and isOnSale = false when OfferCancelled, OfferPurchased, AuctionCancelled, AuctionPurchased, AuctionResulted is called
-  amount: BigInt #can be reserved_price for auction or price for fixed
+  amount: Int #can be reserved_price for auction or price for fixed
   isOnSale: Boolean
   startTime: BigInt
   endTime: BigInt
@@ -21,6 +21,9 @@ type Dispute @entity {
   message: String
   email: String
   phone: String
+  fundReceiver: User
+  payment: Int
+  disputeId: String
 }
 
 type Digi @entity {
@@ -30,10 +33,14 @@ type Digi @entity {
   created: BigInt
   ownerAddress: User!
   creator: User!
+  title: String
+  description: String
+  worth: Int
 }
 
 type User @entity{
   id: ID!
+  networth: Int
   digis: [Digi!] @derivedFrom(field: "ownerAddress")
   disputes: [Dispute!] @derivedFrom(field: "disputeReporter")
   created: [Digi!] @derivedFrom(field: "creator")

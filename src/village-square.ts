@@ -8,13 +8,9 @@ import {
   Withdrawn as WithdrawnEvent
 } from "../generated/VillageSquare/VillageSquare"
 import {
-  VillageSquareAccessControlContractUpdated,
-  AuctionContractUpdated,
-  Deposited,
-  DisputeReported,
-  DisputeResolved,
-  VillageSquareOwnershipTransferred,
-  Withdrawn
+
+  Dispute,
+  User
 } from "../generated/schema"
 
 export function handleVillageSquareAccessControlContractUpdated(
@@ -49,25 +45,34 @@ export function handleDeposited(event: DepositedEvent): void {
 }
 
 export function handleDisputeReported(event: DisputeReportedEvent): void {
-  let entity = new DisputeReported(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+  let dispute = new Dispute(
+    event.address.toHex() + "-" + event.params.auctionId.toString()
   )
-  entity.disputeReporter = event.params.disputeReporter
-  entity.auctionId = event.params.auctionId
-  entity._message = event.params._message
-  entity._email = event.params._email
-  entity._phone = event.params._phone
-  entity.save()
+  dispute.disputeReporter = event.params.disputeReporter.toHexString()
+  dispute.auctionId = event.params.auctionId.toHex()
+  dispute.message = event.params._message
+  dispute.email = event.params._email
+  dispute.phone = event.params._phone
+  dispute.save()
+
+  let user = User.load(event.params.disputeReporter.toHexString())
+  if(!user){
+    user = new User(event.params.disputeReporter.toHexString())
+    user.save()
+  }
 }
 
 export function handleDisputeResolved(event: DisputeResolvedEvent): void {
-  let entity = new DisputeResolved(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+  let dispute = Dispute.load(
+    event.address.toHex() + "-" + event.params.disputeId.toString()
   )
-  entity._fundReceiver = event.params._fundReceiver
-  entity.payment = event.params.payment
-  entity.disputeId = event.params.disputeId
-  entity.save()
+  if(dispute){
+    dispute.fundReceiver = event.params._fundReceiver.toHexString()
+    dispute.payment = event.params.payment.toU64()
+    dispute.disputeId = event.params.disputeId.toHex()
+    dispute.save()
+  }
+  
 }
 
 export function handleVillageSquareOwnershipTransferred(

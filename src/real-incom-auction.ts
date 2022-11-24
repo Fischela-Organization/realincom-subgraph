@@ -13,34 +13,13 @@ import {
   OwnershipTransferred,
   ValueSent
 } from "../generated/RealIncomAuction/RealIncomAuction"
-import { Digi, DigiSales, ExampleEntity } from "../generated/schema"
+import { Digi, DigiSale, User } from "../generated/schema"
 
 
 export function handleAccessControlContractUpdated(
   event: AccessControlContractUpdated
 ): void {
-  // Entities can be loaded from the store using a string ID; this ID
-  // needs to be unique across all entities of the same type
-  let entity = ExampleEntity.load(event.transaction.from.toHex())
-
-  // Entities only exist after they have been saved to the store;
-  // `null` checks allow to create entities on demand
-  if (!entity) {
-    entity = new ExampleEntity(event.transaction.from.toHex())
-
-    // Entity fields can be set using simple assignments
-    entity.count = BigInt.fromI32(0)
-  }
-
-  // BigInt and BigDecimal math are supported
-  entity.count = entity.count + BigInt.fromI32(1)
-
-  // Entity fields can be set based on event parameters
-  entity._accessController = event.params._accessController
-  entity.sender = event.params.sender
-
-  // Entities can be written to the store with `.save()`
-  entity.save()
+  
 
   // Note: If a handler doesn't require existing field values, it is faster
   // _not_ to load the entity from the store. Instead, create it fresh with
@@ -74,30 +53,74 @@ export function handleAuctionBalanceWithdrawn(
 
 }
 
-export function handleAuctionCancelled(event: AuctionCancelled): void {}
+export function handleAuctionCancelled(event: AuctionCancelled): void {
+  const modifyDigisale = DigiSale.load(event.address + "-" + event.params.tokenId.toHex())
+  if(modifyDigisale){
+    modifyDigisale.isOnSale = false
+    modifyDigisale.save()
+  }
+}
 
 export function handleAuctionCreated(event: AuctionCreated): void {
-  const digi = new DigiSales(event.address + "-" + event.params.tokenId.toHex())
-  digi.amount = event.params.reservedPrice
-  digi.buyer = null
-  digi.endTime = event.params.endTime
-  digi.startTime = event.params.startTime
-  digi.seller = event.transaction.from.toHexString()
-  digi.digi = event.params.tokenId.toHex()
-  digi.save()
+  const digiSale = new DigiSale(event.address + "-" + event.params.tokenId.toHex())
+  digiSale.amount = event.params.reservedPrice.toU64()
+  digiSale.buyer = null
+  digiSale.isOnSale = true
+  digiSale.endTime = event.params.endTime
+  digiSale.startTime = event.params.startTime
+  digiSale.seller = event.transaction.from.toHexString()
+  digiSale.digi = event.params.tokenId.toHex()
+  digiSale.save()
+
+  let user = User.load(event.transaction.from.toHex())
+  if(!user){
+    user = new User(event.transaction.from.toHexString())
+    user.networth = 0
+    user.save()
+  }
 }
 
 export function handleAuctionEndTimeModified(
   event: AuctionEndTimeModified
-): void {}
+): void {
 
-export function handleAuctionResulted(event: AuctionResulted): void {}
+  const modifyDigisale = DigiSale.load(event.address + "-" + event.params.tokenId.toHex())
+  if(modifyDigisale){
+    modifyDigisale.endTime = event.params.endTime
+    modifyDigisale.save()
+  }
+}
+
+export function handleAuctionResulted(event: AuctionResulted): void {
+  const digiSale = new DigiSale(event.address + "-" + event.params.tokenId.toHex())
+  digiSale.buyer = event.params.winner.toHexString()
+  digiSale.isOnSale = false
+  digiSale.save()
+}
 
 export function handleAuctionStartTimeModified(
   event: AuctionStartTimeModified
-): void {}
+): void {
+  const modifyDigisale = DigiSale.load(event.address + "-" + event.params.tokenId.toHex())
+  if(modifyDigisale){
+    modifyDigisale.startTime = event.params.startTime
+    modifyDigisale.save()
+  }
+}
 
-export function handleBidPlaced(event: BidPlaced): void {}
+export function handleBidPlaced(event: BidPlaced): void {
+  const modifyDigisale = DigiSale.load(event.address + "-" + event.params.tokenId.toHex())
+  if(modifyDigisale){
+    const modifyDigi = Digi.load(modifyDigisale.digi)
+    if (modifyDigi){
+      modifyDigi.worth = event.params.BidAmount.toU64()
+    }
+    modifyDigisale.amount = event.params.BidAmount.toU64()
+    modifyDigisale.save()
+  }
+
+  
+}
 
 export function handleNFTContractUpdated(event: NFTContractUpdated): void {}
 
