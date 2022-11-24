@@ -33,7 +33,7 @@ export function handleNftMinted(event: NftMintedEvent): void {
   if (digi){
     digi.title = event.params.title
     digi.description = event.params.description
-    digi.worth = event.params.amount.toString()
+    digi.worth = event.params.amount.toU64()
     digi.save()
   }
   
