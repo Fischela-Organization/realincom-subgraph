@@ -33,13 +33,13 @@ export function handleNftMinted(event: NftMintedEvent): void {
   if (digi){
     digi.title = event.params.title
     digi.description = event.params.description
-    digi.worth = event.params.amount.toU64()
+    digi.worth = event.params.amount
     digi.save()
   }
   
   let user = User.load(event.params.owner.toHexString())
   if (user) {
-    user.networth += event.params.amount.toU64()
+    user.networth = event.params.amount
     user.save()
   }
 }

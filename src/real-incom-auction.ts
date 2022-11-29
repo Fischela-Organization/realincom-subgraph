@@ -31,7 +31,7 @@ export function handleAccessControlContractUpdated(
   // example, the contract that has emitted the event can be connected to
   // with:
   //
-  // let contract = Contract.bind(event.address)
+  // let contract = Contract.bind(event.address.toHex())
   //
   // The following functions can then be called on this contract to access
   // state variables and other data:
@@ -54,7 +54,7 @@ export function handleAuctionBalanceWithdrawn(
 }
 
 export function handleAuctionCancelled(event: AuctionCancelled): void {
-  const modifyDigisale = DigiSale.load(event.address + "-" + event.params.tokenId.toHex())
+  const modifyDigisale = DigiSale.load(event.address.toHex() + "-" + event.params.tokenId.toHex())
   if(modifyDigisale){
     modifyDigisale.isOnSale = false
     modifyDigisale.save()
@@ -62,8 +62,8 @@ export function handleAuctionCancelled(event: AuctionCancelled): void {
 }
 
 export function handleAuctionCreated(event: AuctionCreated): void {
-  const digiSale = new DigiSale(event.address + "-" + event.params.tokenId.toHex())
-  digiSale.amount = event.params.reservedPrice.toU64()
+  const digiSale = new DigiSale(event.address.toHex() + "-" + event.params.tokenId.toHex())
+  digiSale.amount = event.params.reservedPrice
   digiSale.buyer = null
   digiSale.isOnSale = true
   digiSale.endTime = event.params.endTime
@@ -75,7 +75,6 @@ export function handleAuctionCreated(event: AuctionCreated): void {
   let user = User.load(event.transaction.from.toHex())
   if(!user){
     user = new User(event.transaction.from.toHexString())
-    user.networth = 0
     user.save()
   }
 }
@@ -84,7 +83,7 @@ export function handleAuctionEndTimeModified(
   event: AuctionEndTimeModified
 ): void {
 
-  const modifyDigisale = DigiSale.load(event.address + "-" + event.params.tokenId.toHex())
+  const modifyDigisale = DigiSale.load(event.address.toHex() + "-" + event.params.tokenId.toHex())
   if(modifyDigisale){
     modifyDigisale.endTime = event.params.endTime
     modifyDigisale.save()
@@ -92,7 +91,7 @@ export function handleAuctionEndTimeModified(
 }
 
 export function handleAuctionResulted(event: AuctionResulted): void {
-  const digiSale = new DigiSale(event.address + "-" + event.params.winner.toHex())
+  const digiSale = new DigiSale(event.address.toHex() + "-" + event.params.winner.toHex())
   digiSale.buyer = event.params.winner.toHexString()
   digiSale.isOnSale = false
   digiSale.save()
@@ -101,7 +100,7 @@ export function handleAuctionResulted(event: AuctionResulted): void {
 export function handleAuctionStartTimeModified(
   event: AuctionStartTimeModified
 ): void {
-  const modifyDigisale = DigiSale.load(event.address + "-" + event.params.tokenId.toHex())
+  const modifyDigisale = DigiSale.load(event.address.toHex() + "-" + event.params.tokenId.toHex())
   if(modifyDigisale){
     modifyDigisale.startTime = event.params.startTime
     modifyDigisale.save()
@@ -109,13 +108,13 @@ export function handleAuctionStartTimeModified(
 }
 
 export function handleBidPlaced(event: BidPlaced): void {
-  const modifyDigisale = DigiSale.load(event.address + "-" + event.params.Bidder.toHex())
+  const modifyDigisale = DigiSale.load(event.address.toHex() + "-" + event.params.Bidder.toHex())
   if(modifyDigisale){
     const modifyDigi = Digi.load(modifyDigisale.digi)
     if (modifyDigi){
-      modifyDigi.worth = event.params.BidAmount.toU64()
+      modifyDigi.worth = event.params.BidAmount
     }
-    modifyDigisale.amount = event.params.BidAmount.toU64()
+    modifyDigisale.amount = event.params.BidAmount
     modifyDigisale.save()
   }
 

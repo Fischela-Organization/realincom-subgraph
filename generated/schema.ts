@@ -68,13 +68,21 @@ export class DigiSale extends Entity {
     this.set("digi", Value.fromString(value));
   }
 
-  get amount(): i32 {
+  get amount(): BigInt | null {
     let value = this.get("amount");
-    return value!.toI32();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
   }
 
-  set amount(value: i32) {
-    this.set("amount", Value.fromI32(value));
+  set amount(value: BigInt | null) {
+    if (!value) {
+      this.unset("amount");
+    } else {
+      this.set("amount", Value.fromBigInt(<BigInt>value));
+    }
   }
 
   get isOnSale(): boolean {
@@ -322,13 +330,21 @@ export class Dispute extends Entity {
     }
   }
 
-  get payment(): i32 {
+  get payment(): BigInt | null {
     let value = this.get("payment");
-    return value!.toI32();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
   }
 
-  set payment(value: i32) {
-    this.set("payment", Value.fromI32(value));
+  set payment(value: BigInt | null) {
+    if (!value) {
+      this.unset("payment");
+    } else {
+      this.set("payment", Value.fromBigInt(<BigInt>value));
+    }
   }
 
   get disputeId(): string | null {
@@ -475,13 +491,21 @@ export class Digi extends Entity {
     }
   }
 
-  get worth(): i32 {
+  get worth(): BigInt | null {
     let value = this.get("worth");
-    return value!.toI32();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
   }
 
-  set worth(value: i32) {
-    this.set("worth", Value.fromI32(value));
+  set worth(value: BigInt | null) {
+    if (!value) {
+      this.unset("worth");
+    } else {
+      this.set("worth", Value.fromBigInt(<BigInt>value));
+    }
   }
 }
 
@@ -516,13 +540,21 @@ export class User extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get networth(): i32 {
+  get networth(): BigInt | null {
     let value = this.get("networth");
-    return value!.toI32();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
   }
 
-  set networth(value: i32) {
-    this.set("networth", Value.fromI32(value));
+  set networth(value: BigInt | null) {
+    if (!value) {
+      this.unset("networth");
+    } else {
+      this.set("networth", Value.fromBigInt(<BigInt>value));
+    }
   }
 
   get digis(): Array<string> | null {

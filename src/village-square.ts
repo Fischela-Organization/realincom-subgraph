@@ -53,7 +53,7 @@ export function handleDisputeResolved(event: DisputeResolvedEvent): void {
   )
   if(dispute){
     dispute.fundReceiver = event.params._fundReceiver.toHexString()
-    dispute.payment = event.params.payment.toU64()
+    dispute.payment = event.params.payment
     dispute.disputeId = event.params.disputeId.toHex()
     dispute.save()
   }
