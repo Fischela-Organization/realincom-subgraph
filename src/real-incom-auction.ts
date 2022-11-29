@@ -92,7 +92,7 @@ export function handleAuctionEndTimeModified(
 }
 
 export function handleAuctionResulted(event: AuctionResulted): void {
-  const digiSale = new DigiSale(event.address + "-" + event.params.tokenId.toHex())
+  const digiSale = new DigiSale(event.address + "-" + event.params.winner.toHex())
   digiSale.buyer = event.params.winner.toHexString()
   digiSale.isOnSale = false
   digiSale.save()
@@ -109,7 +109,7 @@ export function handleAuctionStartTimeModified(
 }
 
 export function handleBidPlaced(event: BidPlaced): void {
-  const modifyDigisale = DigiSale.load(event.address + "-" + event.params.tokenId.toHex())
+  const modifyDigisale = DigiSale.load(event.address + "-" + event.params.Bidder.toHex())
   if(modifyDigisale){
     const modifyDigi = Digi.load(modifyDigisale.digi)
     if (modifyDigi){
