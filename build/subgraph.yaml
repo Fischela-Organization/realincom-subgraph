@@ -8,9 +8,10 @@ dataSources:
     source:
       address: "0xDCC3713d5743d13d41C2a1Bf550188A635E7790f"
       abi: RealIncomAuction
+      startBlock: 29450119
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.7
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - AccessControlContractUpdated
@@ -63,6 +64,7 @@ dataSources:
     source:
       address: "0xd54765ccB13FDeb047276E2F85AF75B99680Ba23"
       abi: RealIncomNft
+      startBlock: 29450108
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -94,6 +96,7 @@ dataSources:
     source:
       address: "0xb7CD2e4889aa8CC288D971aeb82F107594095dbd"
       abi: VillageSquare
+      startBlock: 29450130
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -125,3 +128,67 @@ dataSources:
         - event: Withdrawn(indexed address,uint256)
           handler: handleWithdrawn
       file: VillageSquare\VillageSquare.wasm
+  - kind: ethereum
+    name: RealIncomLoan
+    network: mumbai
+    source:
+      address: "0x565282ce2b73c5fafa19caa6f26fb21c6068e1be"
+      abi: RealIncomLoan
+      startBlock: 29450237
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - LoanCreated
+        - LoanPayed
+        - LoanRequest
+        - LoanWithdrawn
+        - MoneyBorrowed
+        - MoneyTopped
+        - RealIncomLoanValueReceived
+        - RealIncomLoanValueSent
+      abis:
+        - name: RealIncomLoan
+          file: RealIncomLoan\abis\RealIncomLoan.json
+      eventHandlers:
+        - event: LoanCreated(uint256,uint256,uint256,uint256,uint256,address,bool,uint256)
+          handler: handleLoanCreated
+        - event: LoanPayed(uint256,address,address,uint256,uint256)
+          handler: handleLoanPayed
+        - event: LoanRequest(uint256,uint256,uint256,uint256,bool,address,address,uint256,uint256,uint256)
+          handler: handleLoanRequest
+        - event: LoanWithdrawn(uint256,address,uint256)
+          handler: handleLoanWithdrawn
+        - event: MoneyBorrowed(uint256,uint256,uint256,uint256,bool,address,uint256,uint256)
+          handler: handleMoneyBorrowed
+        - event: MoneyTopped(uint256,uint256,address)
+          handler: handleMoneyTopped
+        - event: RealIncomLoanValueReceived(address,uint256)
+          handler: handleRealIncomLoanValueReceived
+        - event: RealIncomLoanValueSent(indexed address,indexed uint256)
+          handler: handleRealIncomLoanValueSent
+      file: RealIncomLoan\RealIncomLoan.wasm
+  - kind: ethereum
+    name: RealIncomAccessControl
+    network: mumbai
+    source:
+      address: "0x93353507af4eD824E95D0fe57BeA183f7C218e59"
+      abi: RealIncomAccessControl
+      startBlock: 29450160
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - AddressManagerUpdated
+        - AdminCreated
+      abis:
+        - name: RealIncomAccessControl
+          file: RealIncomAccessControl\abis\RealIncomAccessControl.json
+      eventHandlers:
+        - event: AddressManagerUpdated(address,address)
+          handler: handleAddressManagerUpdated
+        - event: AdminCreated(address,bool)
+          handler: handleAdminCreated
+      file: RealIncomAccessControl\RealIncomAccessControl.wasm
