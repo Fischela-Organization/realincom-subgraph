@@ -49,7 +49,7 @@ export function handleAccessControlContractUpdated(
 }
 
 export function handleAuctionCancelled(event: AuctionCancelledEvent): void {
-  const modifyDigisale = DigiSale.load(event.address.toHex() + "-" + event.params.tokenId.toHex())
+  const modifyDigisale = DigiSale.load(event.address.toHex() + "-" + event.params.auctionId.toHex())
   if(modifyDigisale){
     modifyDigisale.isOnSale = false
     modifyDigisale.save()
@@ -69,7 +69,7 @@ export function handleAuctionBalanceWithdrawn(
 }
 
 export function handleAuctionCreated(event: AuctionCreatedEvent): void {
-  const digiSale = new DigiSale(event.address.toHex() + "-" + event.params.tokenId.toHex())
+  const digiSale = new DigiSale(event.address.toHex() + "-" + event.params.auctionId.toHex())
   digiSale.amount = event.params.reservedPrice
   digiSale.buyer = null
   digiSale.isOnSale = true
@@ -98,7 +98,7 @@ export function handleAuctionEndTimeModified(
   event: AuctionEndTimeModifiedEvent
 ): void {
 
-  const modifyDigisale = DigiSale.load(event.address.toHex() + "-" + event.params.tokenId.toHex())
+  const modifyDigisale = DigiSale.load(event.address.toHex() + "-" + event.params.auctionId.toHex())
   if(modifyDigisale){
     modifyDigisale.endTime = event.params.endTime
     modifyDigisale.save()
@@ -117,7 +117,7 @@ export function handleAuctionResulted(event: AuctionResultedEvent): void {
 export function handleAuctionStartTimeModified(
   event: AuctionStartTimeModifiedEvent
 ): void {
-  const modifyDigisale = DigiSale.load(event.address.toHex() + "-" + event.params.tokenId.toHex())
+  const modifyDigisale = DigiSale.load(event.address.toHex() + "-" + event.params.auctionId.toHex())
   if(modifyDigisale){
     modifyDigisale.startTime = event.params.startTime
     modifyDigisale.save()
@@ -126,7 +126,7 @@ export function handleAuctionStartTimeModified(
 
 
 export function handleBidPlaced(event: BidPlacedEvent): void {
-  const modifyDigisale = DigiSale.load(event.address.toHex() + "-" + event.params.Bidder.toHex())
+  const modifyDigisale = DigiSale.load(event.address.toHex() + "-" + event.params.auctionId.toHex())
   if(modifyDigisale){
     const modifyDigi = Digi.load(modifyDigisale.digi)
     if (modifyDigi){

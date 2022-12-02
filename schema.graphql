@@ -1,4 +1,3 @@
-
 type DigiSale @entity {
   id: ID!
   auctionId: ID
@@ -39,93 +38,40 @@ type Digi @entity {
   worth: BigInt
 }
 
-type User @entity{
+type Loan @entity {
+  id: ID!
+  amountSupplied: BigInt
+  interestRate: BigInt
+  loanDuration: BigInt
+  toBePaidMonthly: BigInt
+  borrowedLoans: [Borrowed!] @derivedFrom(field: "loan")
+  roi: BigInt
+  lender: User!
+  isActive: Boolean
+  loanId: BigInt
+}
+
+type Borrowed @entity {
+  id: ID!
+  amountBorrowed: BigInt
+  interestRate: BigInt
+  loanDuration: BigInt
+  monthlyRemittance: BigInt
+  isApproved: Boolean
+  lender: User
+  borrower: User
+  loanId: BigInt
+  loan: Loan
+  borrowerId: BigInt
+  nftCollateralId: Digi
+}
+
+type User @entity {
   id: ID!
   networth: BigInt
   digis: [Digi!] @derivedFrom(field: "ownerAddress")
   disputes: [Dispute!] @derivedFrom(field: "disputeReporter")
   created: [Digi!] @derivedFrom(field: "creator")
-}
-type LoanCreated @entity {
-  id: ID!
-  amountSupplied: BigInt! # uint256
-  interestRate: BigInt! # uint256
-  loanDuration: BigInt! # uint256
-  toBePaidMonthly: BigInt! # uint256
-  roi: BigInt! # uint256
-  lender: Bytes! # address
-  isActive: Boolean! # bool
-  loanId: BigInt! # uint256
-}
-
-type LoanPayed @entity {
-  id: ID!
-  amountToPayBack: BigInt! # uint256
-  lender: Bytes! # address
-  borrower: Bytes! # address
-  loanId: BigInt! # uint256
-  borrowerId: BigInt! # uint256
-}
-
-type LoanRequest @entity {
-  id: ID!
-  amountBorrowed: BigInt! # uint256
-  interestRate: BigInt! # uint256
-  loanDuration: BigInt! # uint256
-  monthlyRemittance: BigInt! # uint256
-  isApproved: Boolean! # bool
-  lender: Bytes! # address
-  borrower: Bytes! # address
-  loanId: BigInt! # uint256
-  borrowId: BigInt! # uint256
-  nftCollateralId: BigInt! # uint256
-}
-
-type LoanWithdrawn @entity {
-  id: ID!
-  _amount: BigInt! # uint256
-  lender: Bytes! # address
-  loanId: BigInt! # uint256
-}
-
-type MoneyBorrowed @entity {
-  id: ID!
-  amountBorrowed: BigInt! # uint256
-  interestRate: BigInt! # uint256
-  loanDuration: BigInt! # uint256
-  monthlyRemittance: BigInt! # uint256
-  isApproved: Boolean! # bool
-  lender: Bytes! # address
-  loanId: BigInt! # uint256
-  borrowerId: BigInt! # uint256
-}
-
-type MoneyTopped @entity {
-  id: ID!
-  loanId: BigInt! # uint256
-  amountTopped: BigInt! # uint256
-  sender: Bytes! # address
-}
-
-type RealIncomLoanValueReceived @entity {
-  id: ID!
-  sender: Bytes! # address
-  value: BigInt! # uint256
-}
-
-type RealIncomLoanValueSent @entity {
-  id: ID!
-  to: Bytes! # address
-  val: BigInt! # uint256
-}
-type AddressManagerUpdated @entity {
-  id: ID!
-  addressManagerAddress: Bytes! # address
-  innitiator: Bytes! # address
-}
-
-type AdminCreated @entity {
-  id: ID!
-  admin: Bytes! # address
-  isAdmin: Boolean! # bool
+  createdLoans: [Loan!] @derivedFrom(field: "lender")
+  borrowedLoans: [Borrowed!] @derivedFrom(field: "borrower")
 }

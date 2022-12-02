@@ -5,117 +5,101 @@ import {
   LoanWithdrawn as LoanWithdrawnEvent,
   MoneyBorrowed as MoneyBorrowedEvent,
   MoneyTopped as MoneyToppedEvent,
+  RealIncomLoan,
   RealIncomLoanValueReceived as RealIncomLoanValueReceivedEvent,
-  RealIncomLoanValueSent as RealIncomLoanValueSentEvent
-} from "../generated/RealIncomLoan/RealIncomLoan"
-import {
-  LoanCreated,
-  LoanPayed,
-  LoanRequest,
-  LoanWithdrawn,
-  MoneyBorrowed,
-  MoneyTopped,
-  RealIncomLoanValueReceived,
-  RealIncomLoanValueSent
-} from "../generated/schema"
+  RealIncomLoanValueSent as RealIncomLoanValueSentEvent,
+} from "../generated/RealIncomLoan/RealIncomLoan";
+import { Borrowed, Loan, User } from "../generated/schema";
 
 export function handleLoanCreated(event: LoanCreatedEvent): void {
-  let entity = new LoanCreated(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity.amountSupplied = event.params.amountSupplied
-  entity.interestRate = event.params.interestRate
-  entity.loanDuration = event.params.loanDuration
-  entity.toBePaidMonthly = event.params.toBePaidMonthly
-  entity.roi = event.params.roi
-  entity.lender = event.params.lender
-  entity.isActive = event.params.isActive
-  entity.loanId = event.params.loanId
-  entity.save()
+  let loan = new Loan(event.params.loanId.toHex());
+  loan.amountSupplied = event.params.amountSupplied;
+  loan.interestRate = event.params.interestRate;
+  loan.loanDuration = event.params.loanDuration;
+  loan.toBePaidMonthly = event.params.toBePaidMonthly;
+  loan.roi = event.params.roi;
+  loan.lender = event.params.lender.toHexString();
+  loan.isActive = event.params.isActive;
+  loan.loanId = event.params.loanId;
+  loan.save();
 }
 
 export function handleLoanPayed(event: LoanPayedEvent): void {
-  let entity = new LoanPayed(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity.amountToPayBack = event.params.amountToPayBack
-  entity.lender = event.params.lender
-  entity.borrower = event.params.borrower
-  entity.loanId = event.params.loanId
-  entity.borrowerId = event.params.borrowerId
-  entity.save()
+  let borrowedLoans = Borrowed.load(event.params.loanId.toHex());
+  if (borrowedLoans) {
+    let loanContract = RealIncomLoan.bind(event.address);
+    let amountSupplied = loanContract.try_borrowers(event.params.loanId);
+    borrowedLoans.amountBorrowed = amountSupplied.value.getAmountBorrowed()
+    borrowedLoans.save();
+  }
 }
 
 export function handleLoanRequest(event: LoanRequestEvent): void {
-  let entity = new LoanRequest(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity.amountBorrowed = event.params.amountBorrowed
-  entity.interestRate = event.params.interestRate
-  entity.loanDuration = event.params.loanDuration
-  entity.monthlyRemittance = event.params.monthlyRemittance
-  entity.isApproved = event.params.isApproved
-  entity.lender = event.params.lender
-  entity.borrower = event.params.borrower
-  entity.loanId = event.params.loanId
-  entity.borrowId = event.params.borrowId
-  entity.nftCollateralId = event.params.nftCollateralId
-  entity.save()
+  let borrowed = new Borrowed(event.params.borrowId.toHex());
+  borrowed.amountBorrowed = event.params.amountBorrowed;
+  borrowed.interestRate = event.params.interestRate;
+  borrowed.loanDuration = event.params.loanDuration;
+  borrowed.monthlyRemittance = event.params.monthlyRemittance;
+  borrowed.isApproved = event.params.isApproved;
+  borrowed.lender = event.params.lender.toHexString();
+  borrowed.borrower = event.params.borrower.toHexString();
+  borrowed.loanId = event.params.loanId;
+  borrowed.loan = event.params.loanId.toHex();
+
+  borrowed.borrowerId = event.params.borrowId;
+  borrowed.nftCollateralId = event.params.nftCollateralId.toString();
+  borrowed.save();
+
+  let user = User.load(event.params.borrower.toHexString());
+  if (!user) {
+    user = new User(event.params.borrower.toHexString());
+    user.save();
+  }
 }
 
 export function handleLoanWithdrawn(event: LoanWithdrawnEvent): void {
-  let entity = new LoanWithdrawn(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity._amount = event.params._amount
-  entity.lender = event.params.lender
-  entity.loanId = event.params.loanId
-  entity.save()
+  let loan = Loan.load(event.params.loanId.toHex());
+  if (loan) {
+    let loanContract = RealIncomLoan.bind(event.address);
+    let amountSupplied = loanContract.try_loans(event.params.loanId);
+
+    loan.amountSupplied = amountSupplied.value.getAmountSupplied();
+    loan.save();
+  }
 }
 
 export function handleMoneyBorrowed(event: MoneyBorrowedEvent): void {
-  let entity = new MoneyBorrowed(
+  let borrowed = new Borrowed(
     event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity.amountBorrowed = event.params.amountBorrowed
-  entity.interestRate = event.params.interestRate
-  entity.loanDuration = event.params.loanDuration
-  entity.monthlyRemittance = event.params.monthlyRemittance
-  entity.isApproved = event.params.isApproved
-  entity.lender = event.params.lender
-  entity.loanId = event.params.loanId
-  entity.borrowerId = event.params.borrowerId
-  entity.save()
+  );
+  borrowed.amountBorrowed = event.params.amountBorrowed;
+  borrowed.interestRate = event.params.interestRate;
+  borrowed.loanDuration = event.params.loanDuration;
+  borrowed.monthlyRemittance = event.params.monthlyRemittance;
+  borrowed.isApproved = event.params.isApproved;
+  borrowed.lender = event.params.lender.toHexString();
+  borrowed.loanId = event.params.loanId;
+  borrowed.borrowerId = event.params.borrowerId;
+  borrowed.save();
 }
 
 export function handleMoneyTopped(event: MoneyToppedEvent): void {
-  let entity = new MoneyTopped(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity.loanId = event.params.loanId
-  entity.amountTopped = event.params.amountTopped
-  entity.sender = event.params.sender
-  entity.save()
+  let loan = Loan.load(event.params.loanId.toHex());
+  if (loan) {
+    loan.loanId = event.params.loanId;
+    let loanContract = RealIncomLoan.bind(event.address);
+    let amountSupplied = loanContract.try_loans(event.params.loanId);
+
+    loan.amountSupplied = amountSupplied.value.getAmountSupplied();
+    loan.lender = event.params.sender.toHexString();
+    loan.save();
+  }
 }
 
 export function handleRealIncomLoanValueReceived(
   event: RealIncomLoanValueReceivedEvent
-): void {
-  let entity = new RealIncomLoanValueReceived(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity.sender = event.params.sender
-  entity.value = event.params.value
-  entity.save()
-}
+): void {}
 
 export function handleRealIncomLoanValueSent(
   event: RealIncomLoanValueSentEvent
-): void {
-  let entity = new RealIncomLoanValueSent(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity.to = event.params.to
-  entity.val = event.params.val
-  entity.save()
-}
+): void {}
