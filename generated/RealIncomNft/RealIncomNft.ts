@@ -113,12 +113,36 @@ export class NftMinted__Params {
     return this._event.parameters[3].value.toString();
   }
 
-  get amount(): BigInt {
+  get worth(): BigInt {
     return this._event.parameters[4].value.toBigInt();
   }
 
   get tokenId(): BigInt {
     return this._event.parameters[5].value.toBigInt();
+  }
+
+  get productAge(): BigInt {
+    return this._event.parameters[6].value.toBigInt();
+  }
+
+  get revenue(): BigInt {
+    return this._event.parameters[7].value.toBigInt();
+  }
+
+  get expenses(): BigInt {
+    return this._event.parameters[8].value.toBigInt();
+  }
+
+  get traffic(): BigInt {
+    return this._event.parameters[9].value.toBigInt();
+  }
+
+  get location(): string {
+    return this._event.parameters[10].value.toString();
+  }
+
+  get productLink(): string {
+    return this._event.parameters[11].value.toString();
   }
 }
 
@@ -148,6 +172,38 @@ export class Transfer__Params {
   }
 }
 
+export class RealIncomNft__seeNftResult {
+  value0: string;
+  value1: string;
+  value2: string;
+
+  constructor(value0: string, value1: string, value2: string) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromString(this.value0));
+    map.set("value1", ethereum.Value.fromString(this.value1));
+    map.set("value2", ethereum.Value.fromString(this.value2));
+    return map;
+  }
+
+  getValue0(): string {
+    return this.value0;
+  }
+
+  getValue1(): string {
+    return this.value1;
+  }
+
+  getValue2(): string {
+    return this.value2;
+  }
+}
+
 export class RealIncomNft__tokenIdToNftResult {
   value0: Address;
   value1: string;
@@ -155,6 +211,12 @@ export class RealIncomNft__tokenIdToNftResult {
   value3: string;
   value4: BigInt;
   value5: BigInt;
+  value6: BigInt;
+  value7: BigInt;
+  value8: BigInt;
+  value9: BigInt;
+  value10: string;
+  value11: string;
 
   constructor(
     value0: Address,
@@ -162,7 +224,13 @@ export class RealIncomNft__tokenIdToNftResult {
     value2: string,
     value3: string,
     value4: BigInt,
-    value5: BigInt
+    value5: BigInt,
+    value6: BigInt,
+    value7: BigInt,
+    value8: BigInt,
+    value9: BigInt,
+    value10: string,
+    value11: string
   ) {
     this.value0 = value0;
     this.value1 = value1;
@@ -170,6 +238,12 @@ export class RealIncomNft__tokenIdToNftResult {
     this.value3 = value3;
     this.value4 = value4;
     this.value5 = value5;
+    this.value6 = value6;
+    this.value7 = value7;
+    this.value8 = value8;
+    this.value9 = value9;
+    this.value10 = value10;
+    this.value11 = value11;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
@@ -180,6 +254,12 @@ export class RealIncomNft__tokenIdToNftResult {
     map.set("value3", ethereum.Value.fromString(this.value3));
     map.set("value4", ethereum.Value.fromUnsignedBigInt(this.value4));
     map.set("value5", ethereum.Value.fromUnsignedBigInt(this.value5));
+    map.set("value6", ethereum.Value.fromUnsignedBigInt(this.value6));
+    map.set("value7", ethereum.Value.fromUnsignedBigInt(this.value7));
+    map.set("value8", ethereum.Value.fromUnsignedBigInt(this.value8));
+    map.set("value9", ethereum.Value.fromUnsignedBigInt(this.value9));
+    map.set("value10", ethereum.Value.fromString(this.value10));
+    map.set("value11", ethereum.Value.fromString(this.value11));
     return map;
   }
 
@@ -199,12 +279,36 @@ export class RealIncomNft__tokenIdToNftResult {
     return this.value3;
   }
 
-  getNetWorth(): BigInt {
+  get_worth(): BigInt {
     return this.value4;
   }
 
   get_tokenId(): BigInt {
     return this.value5;
+  }
+
+  get_productAge(): BigInt {
+    return this.value6;
+  }
+
+  get_revenue(): BigInt {
+    return this.value7;
+  }
+
+  get_expenses(): BigInt {
+    return this.value8;
+  }
+
+  get_traffic(): BigInt {
+    return this.value9;
+  }
+
+  getLocation(): string {
+    return this.value10;
+  }
+
+  get_productLink(): string {
+    return this.value11;
   }
 }
 
@@ -245,6 +349,29 @@ export class RealIncomNft extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toString());
+  }
+
+  fetchNftValue(_tokenId: BigInt): BigInt {
+    let result = super.call(
+      "fetchNftValue",
+      "fetchNftValue(uint256):(uint256)",
+      [ethereum.Value.fromUnsignedBigInt(_tokenId)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_fetchNftValue(_tokenId: BigInt): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "fetchNftValue",
+      "fetchNftValue(uint256):(uint256)",
+      [ethereum.Value.fromUnsignedBigInt(_tokenId)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   getApproved(tokenId: BigInt): Address {
@@ -294,14 +421,30 @@ export class RealIncomNft extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
-  mintNFT(_title: string, _description: string, _digiURI: string): BigInt {
+  mintNFT(
+    _title: string,
+    _description: string,
+    _digiURI: string,
+    productAge: BigInt,
+    monthlyRevenue: BigInt,
+    monthlyExpenses: BigInt,
+    monthlyTraffic: BigInt,
+    location: string,
+    productLink: string
+  ): BigInt {
     let result = super.call(
       "mintNFT",
-      "mintNFT(string,string,string):(uint256)",
+      "mintNFT(string,string,string,uint256,uint256,uint256,uint256,string,string):(uint256)",
       [
         ethereum.Value.fromString(_title),
         ethereum.Value.fromString(_description),
-        ethereum.Value.fromString(_digiURI)
+        ethereum.Value.fromString(_digiURI),
+        ethereum.Value.fromUnsignedBigInt(productAge),
+        ethereum.Value.fromUnsignedBigInt(monthlyRevenue),
+        ethereum.Value.fromUnsignedBigInt(monthlyExpenses),
+        ethereum.Value.fromUnsignedBigInt(monthlyTraffic),
+        ethereum.Value.fromString(location),
+        ethereum.Value.fromString(productLink)
       ]
     );
 
@@ -311,15 +454,27 @@ export class RealIncomNft extends ethereum.SmartContract {
   try_mintNFT(
     _title: string,
     _description: string,
-    _digiURI: string
+    _digiURI: string,
+    productAge: BigInt,
+    monthlyRevenue: BigInt,
+    monthlyExpenses: BigInt,
+    monthlyTraffic: BigInt,
+    location: string,
+    productLink: string
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "mintNFT",
-      "mintNFT(string,string,string):(uint256)",
+      "mintNFT(string,string,string,uint256,uint256,uint256,uint256,string,string):(uint256)",
       [
         ethereum.Value.fromString(_title),
         ethereum.Value.fromString(_description),
-        ethereum.Value.fromString(_digiURI)
+        ethereum.Value.fromString(_digiURI),
+        ethereum.Value.fromUnsignedBigInt(productAge),
+        ethereum.Value.fromUnsignedBigInt(monthlyRevenue),
+        ethereum.Value.fromUnsignedBigInt(monthlyExpenses),
+        ethereum.Value.fromUnsignedBigInt(monthlyTraffic),
+        ethereum.Value.fromString(location),
+        ethereum.Value.fromString(productLink)
       ]
     );
     if (result.reverted) {
@@ -363,6 +518,41 @@ export class RealIncomNft extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
+  seeNft(_tokenId: BigInt): RealIncomNft__seeNftResult {
+    let result = super.call(
+      "seeNft",
+      "seeNft(uint256):(string,string,string)",
+      [ethereum.Value.fromUnsignedBigInt(_tokenId)]
+    );
+
+    return new RealIncomNft__seeNftResult(
+      result[0].toString(),
+      result[1].toString(),
+      result[2].toString()
+    );
+  }
+
+  try_seeNft(
+    _tokenId: BigInt
+  ): ethereum.CallResult<RealIncomNft__seeNftResult> {
+    let result = super.tryCall(
+      "seeNft",
+      "seeNft(uint256):(string,string,string)",
+      [ethereum.Value.fromUnsignedBigInt(_tokenId)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new RealIncomNft__seeNftResult(
+        value[0].toString(),
+        value[1].toString(),
+        value[2].toString()
+      )
+    );
+  }
+
   supportsInterface(interfaceId: Bytes): boolean {
     let result = super.call(
       "supportsInterface",
@@ -404,7 +594,7 @@ export class RealIncomNft extends ethereum.SmartContract {
   tokenIdToNft(param0: BigInt): RealIncomNft__tokenIdToNftResult {
     let result = super.call(
       "tokenIdToNft",
-      "tokenIdToNft(uint256):(address,string,string,string,uint256,uint256)",
+      "tokenIdToNft(uint256):(address,string,string,string,uint256,uint256,uint256,uint256,uint256,uint256,string,string)",
       [ethereum.Value.fromUnsignedBigInt(param0)]
     );
 
@@ -414,7 +604,13 @@ export class RealIncomNft extends ethereum.SmartContract {
       result[2].toString(),
       result[3].toString(),
       result[4].toBigInt(),
-      result[5].toBigInt()
+      result[5].toBigInt(),
+      result[6].toBigInt(),
+      result[7].toBigInt(),
+      result[8].toBigInt(),
+      result[9].toBigInt(),
+      result[10].toString(),
+      result[11].toString()
     );
   }
 
@@ -423,7 +619,7 @@ export class RealIncomNft extends ethereum.SmartContract {
   ): ethereum.CallResult<RealIncomNft__tokenIdToNftResult> {
     let result = super.tryCall(
       "tokenIdToNft",
-      "tokenIdToNft(uint256):(address,string,string,string,uint256,uint256)",
+      "tokenIdToNft(uint256):(address,string,string,string,uint256,uint256,uint256,uint256,uint256,uint256,string,string)",
       [ethereum.Value.fromUnsignedBigInt(param0)]
     );
     if (result.reverted) {
@@ -437,7 +633,13 @@ export class RealIncomNft extends ethereum.SmartContract {
         value[2].toString(),
         value[3].toString(),
         value[4].toBigInt(),
-        value[5].toBigInt()
+        value[5].toBigInt(),
+        value[6].toBigInt(),
+        value[7].toBigInt(),
+        value[8].toBigInt(),
+        value[9].toBigInt(),
+        value[10].toString(),
+        value[11].toString()
       )
     );
   }
@@ -553,6 +755,30 @@ export class MintNFTCall__Inputs {
 
   get _digiURI(): string {
     return this._call.inputValues[2].value.toString();
+  }
+
+  get productAge(): BigInt {
+    return this._call.inputValues[3].value.toBigInt();
+  }
+
+  get monthlyRevenue(): BigInt {
+    return this._call.inputValues[4].value.toBigInt();
+  }
+
+  get monthlyExpenses(): BigInt {
+    return this._call.inputValues[5].value.toBigInt();
+  }
+
+  get monthlyTraffic(): BigInt {
+    return this._call.inputValues[6].value.toBigInt();
+  }
+
+  get location(): string {
+    return this._call.inputValues[7].value.toString();
+  }
+
+  get productLink(): string {
+    return this._call.inputValues[8].value.toString();
   }
 }
 

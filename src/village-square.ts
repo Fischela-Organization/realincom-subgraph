@@ -1,3 +1,4 @@
+import { Dispute, User } from "../generated/schema"
 import {
   VillageSquareAccessControlContractUpdated as VillageSquareAccessControlContractUpdatedEvent,
   AuctionContractUpdated as AuctionContractUpdatedEvent,
@@ -7,16 +8,12 @@ import {
   VillageSquareOwnershipTransferred as VillageSquareOwnershipTransferredEvent,
   Withdrawn as WithdrawnEvent
 } from "../generated/VillageSquare/VillageSquare"
-import {
 
-  Dispute,
-  User
-} from "../generated/schema"
 
 export function handleVillageSquareAccessControlContractUpdated(
   event: VillageSquareAccessControlContractUpdatedEvent
 ): void {
-  
+ 
 }
 
 export function handleAuctionContractUpdated(
@@ -26,7 +23,17 @@ export function handleAuctionContractUpdated(
 }
 
 export function handleDeposited(event: DepositedEvent): void {
- 
+
+}
+
+export function handleVillageSquareOwnershipTransferred(
+  event: VillageSquareOwnershipTransferredEvent
+): void {
+
+}
+
+export function handleWithdrawn(event: WithdrawnEvent): void {
+
 }
 
 export function handleDisputeReported(event: DisputeReportedEvent): void {
@@ -58,14 +65,4 @@ export function handleDisputeResolved(event: DisputeResolvedEvent): void {
     dispute.save()
   }
   
-}
-
-export function handleVillageSquareOwnershipTransferred(
-  event: VillageSquareOwnershipTransferredEvent
-): void {
-  
-}
-
-export function handleWithdrawn(event: WithdrawnEvent): void {
-
 }

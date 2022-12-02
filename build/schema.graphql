@@ -31,6 +31,7 @@ type Digi @entity {
   metadataURI: String!
   baseURI: String
   created: BigInt
+  isOnSale: Boolean
   ownerAddress: User!
   creator: User!
   title: String

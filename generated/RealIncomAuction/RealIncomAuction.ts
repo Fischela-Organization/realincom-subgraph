@@ -97,24 +97,44 @@ export class AuctionCreated__Params {
     this._event = event;
   }
 
-  get tokenId(): BigInt {
+  get auctionId(): BigInt {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get startTime(): BigInt {
+  get tokenId(): BigInt {
     return this._event.parameters[1].value.toBigInt();
   }
 
-  get reservedPrice(): BigInt {
+  get startTime(): BigInt {
     return this._event.parameters[2].value.toBigInt();
   }
 
-  get endTime(): BigInt {
+  get reservedPrice(): BigInt {
     return this._event.parameters[3].value.toBigInt();
   }
 
+  get intergrityConfirmed(): boolean {
+    return this._event.parameters[4].value.toBoolean();
+  }
+
+  get resulted(): boolean {
+    return this._event.parameters[5].value.toBoolean();
+  }
+
+  get endTime(): BigInt {
+    return this._event.parameters[6].value.toBigInt();
+  }
+
   get seller(): Address {
-    return this._event.parameters[4].value.toAddress();
+    return this._event.parameters[7].value.toAddress();
+  }
+
+  get isOnSale(): boolean {
+    return this._event.parameters[8].value.toBoolean();
+  }
+
+  get sellType(): string {
+    return this._event.parameters[9].value.toString();
   }
 }
 
@@ -165,16 +185,28 @@ export class AuctionResulted__Params {
     return this._event.parameters[0].value.toAddress();
   }
 
-  get winner(): Address {
+  get buyer(): Address {
     return this._event.parameters[1].value.toAddress();
   }
 
+  get winner(): Address {
+    return this._event.parameters[2].value.toAddress();
+  }
+
   get winningBid(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
+    return this._event.parameters[3].value.toBigInt();
   }
 
   get endTime(): BigInt {
-    return this._event.parameters[3].value.toBigInt();
+    return this._event.parameters[4].value.toBigInt();
+  }
+
+  get auctionId(): BigInt {
+    return this._event.parameters[5].value.toBigInt();
+  }
+
+  get tokenId(): BigInt {
+    return this._event.parameters[6].value.toBigInt();
   }
 }
 
@@ -232,6 +264,14 @@ export class BidPlaced__Params {
   get bidTime(): BigInt {
     return this._event.parameters[2].value.toBigInt();
   }
+
+  get auctionId(): BigInt {
+    return this._event.parameters[3].value.toBigInt();
+  }
+
+  get tokenId(): BigInt {
+    return this._event.parameters[4].value.toBigInt();
+  }
 }
 
 export class NFTContractUpdated extends ethereum.Event {
@@ -278,6 +318,62 @@ export class OwnershipTransferred__Params {
   }
 }
 
+export class ResultsConfirmed extends ethereum.Event {
+  get params(): ResultsConfirmed__Params {
+    return new ResultsConfirmed__Params(this);
+  }
+}
+
+export class ResultsConfirmed__Params {
+  _event: ResultsConfirmed;
+
+  constructor(event: ResultsConfirmed) {
+    this._event = event;
+  }
+
+  get seller(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get buyer(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+
+  get isOnsale(): boolean {
+    return this._event.parameters[2].value.toBoolean();
+  }
+
+  get intergrityConfirmed(): boolean {
+    return this._event.parameters[3].value.toBoolean();
+  }
+
+  get tokenId(): BigInt {
+    return this._event.parameters[4].value.toBigInt();
+  }
+}
+
+export class ValueReceived extends ethereum.Event {
+  get params(): ValueReceived__Params {
+    return new ValueReceived__Params(this);
+  }
+}
+
+export class ValueReceived__Params {
+  _event: ValueReceived;
+
+  constructor(event: ValueReceived) {
+    this._event = event;
+  }
+
+  get sender(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get value(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+}
+
 export class ValueSent extends ethereum.Event {
   get params(): ValueSent__Params {
     return new ValueSent__Params(this);
@@ -308,7 +404,9 @@ export class RealIncomAuction__auctionsResult {
   value4: boolean;
   value5: BigInt;
   value6: Address;
-  value7: boolean;
+  value7: Address;
+  value8: boolean;
+  value9: string;
 
   constructor(
     value0: BigInt,
@@ -318,7 +416,9 @@ export class RealIncomAuction__auctionsResult {
     value4: boolean,
     value5: BigInt,
     value6: Address,
-    value7: boolean
+    value7: Address,
+    value8: boolean,
+    value9: string
   ) {
     this.value0 = value0;
     this.value1 = value1;
@@ -328,6 +428,8 @@ export class RealIncomAuction__auctionsResult {
     this.value5 = value5;
     this.value6 = value6;
     this.value7 = value7;
+    this.value8 = value8;
+    this.value9 = value9;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
@@ -339,7 +441,9 @@ export class RealIncomAuction__auctionsResult {
     map.set("value4", ethereum.Value.fromBoolean(this.value4));
     map.set("value5", ethereum.Value.fromUnsignedBigInt(this.value5));
     map.set("value6", ethereum.Value.fromAddress(this.value6));
-    map.set("value7", ethereum.Value.fromBoolean(this.value7));
+    map.set("value7", ethereum.Value.fromAddress(this.value7));
+    map.set("value8", ethereum.Value.fromBoolean(this.value8));
+    map.set("value9", ethereum.Value.fromString(this.value9));
     return map;
   }
 
@@ -371,8 +475,16 @@ export class RealIncomAuction__auctionsResult {
     return this.value6;
   }
 
-  getIsOnSale(): boolean {
+  getBuyer(): Address {
     return this.value7;
+  }
+
+  getIsOnSale(): boolean {
+    return this.value8;
+  }
+
+  getSellType(): string {
+    return this.value9;
   }
 }
 
@@ -492,7 +604,7 @@ export class RealIncomAuction extends ethereum.SmartContract {
   auctions(param0: BigInt): RealIncomAuction__auctionsResult {
     let result = super.call(
       "auctions",
-      "auctions(uint256):(uint256,uint256,uint256,bool,bool,uint256,address,bool)",
+      "auctions(uint256):(uint256,uint256,uint256,bool,bool,uint256,address,address,bool,string)",
       [ethereum.Value.fromUnsignedBigInt(param0)]
     );
 
@@ -504,7 +616,9 @@ export class RealIncomAuction extends ethereum.SmartContract {
       result[4].toBoolean(),
       result[5].toBigInt(),
       result[6].toAddress(),
-      result[7].toBoolean()
+      result[7].toAddress(),
+      result[8].toBoolean(),
+      result[9].toString()
     );
   }
 
@@ -513,7 +627,7 @@ export class RealIncomAuction extends ethereum.SmartContract {
   ): ethereum.CallResult<RealIncomAuction__auctionsResult> {
     let result = super.tryCall(
       "auctions",
-      "auctions(uint256):(uint256,uint256,uint256,bool,bool,uint256,address,bool)",
+      "auctions(uint256):(uint256,uint256,uint256,bool,bool,uint256,address,address,bool,string)",
       [ethereum.Value.fromUnsignedBigInt(param0)]
     );
     if (result.reverted) {
@@ -529,7 +643,9 @@ export class RealIncomAuction extends ethereum.SmartContract {
         value[4].toBoolean(),
         value[5].toBigInt(),
         value[6].toAddress(),
-        value[7].toBoolean()
+        value[7].toAddress(),
+        value[8].toBoolean(),
+        value[9].toString()
       )
     );
   }
@@ -794,6 +910,32 @@ export class ConstructorCall__Outputs {
   _call: ConstructorCall;
 
   constructor(call: ConstructorCall) {
+    this._call = call;
+  }
+}
+
+export class DefaultCall extends ethereum.Call {
+  get inputs(): DefaultCall__Inputs {
+    return new DefaultCall__Inputs(this);
+  }
+
+  get outputs(): DefaultCall__Outputs {
+    return new DefaultCall__Outputs(this);
+  }
+}
+
+export class DefaultCall__Inputs {
+  _call: DefaultCall;
+
+  constructor(call: DefaultCall) {
+    this._call = call;
+  }
+}
+
+export class DefaultCall__Outputs {
+  _call: DefaultCall;
+
+  constructor(call: DefaultCall) {
     this._call = call;
   }
 }

@@ -1,4 +1,4 @@
-specVersion: 0.0.4
+specVersion: 0.0.5
 schema:
   file: schema.graphql
 dataSources:
@@ -6,12 +6,11 @@ dataSources:
     name: RealIncomAuction
     network: mumbai
     source:
-      address: "0x5d3648C8088cD3951F71Ce2c31ffaba43ba1aBFB"
+      address: "0xDCC3713d5743d13d41C2a1Bf550188A635E7790f"
       abi: RealIncomAuction
-      startBlock: 29197780
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - AccessControlContractUpdated
@@ -24,6 +23,8 @@ dataSources:
         - BidPlaced
         - NFTContractUpdated
         - OwnershipTransferred
+        - ResultsConfirmed
+        - ValueReceived
         - ValueSent
       abis:
         - name: RealIncomAuction
@@ -35,20 +36,24 @@ dataSources:
           handler: handleAuctionBalanceWithdrawn
         - event: AuctionCancelled(uint256,uint256,address)
           handler: handleAuctionCancelled
-        - event: AuctionCreated(uint256,uint256,uint256,uint256,address)
+        - event: AuctionCreated(uint256,uint256,uint256,uint256,bool,bool,uint256,address,bool,string)
           handler: handleAuctionCreated
         - event: AuctionEndTimeModified(uint256,uint256,address,uint256)
           handler: handleAuctionEndTimeModified
-        - event: AuctionResulted(address,address,uint256,uint256)
+        - event: AuctionResulted(address,address,address,uint256,uint256,uint256,uint256)
           handler: handleAuctionResulted
         - event: AuctionStartTimeModified(uint256,uint256,address,uint256)
           handler: handleAuctionStartTimeModified
-        - event: BidPlaced(uint256,address,uint256)
+        - event: BidPlaced(uint256,address,uint256,uint256,uint256)
           handler: handleBidPlaced
         - event: NFTContractUpdated(indexed address,indexed address)
           handler: handleNFTContractUpdated
         - event: OwnershipTransferred(indexed address,indexed address)
           handler: handleOwnershipTransferred
+        - event: ResultsConfirmed(address,address,bool,bool,uint256)
+          handler: handleResultsConfirmed
+        - event: ValueReceived(address,uint256)
+          handler: handleValueReceived
         - event: ValueSent(indexed address,indexed uint256)
           handler: handleValueSent
       file: RealIncomAuction\RealIncomAuction.wasm
@@ -56,9 +61,8 @@ dataSources:
     name: RealIncomNft
     network: mumbai
     source:
-      address: "0x2Cdb125180A315afd2926850b56616AdADBa840B"
+      address: "0xd54765ccB13FDeb047276E2F85AF75B99680Ba23"
       abi: RealIncomNft
-      startBlock: 29401770
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -79,7 +83,7 @@ dataSources:
           handler: handleApproval
         - event: ApprovalForAll(indexed address,indexed address,bool)
           handler: handleApprovalForAll
-        - event: NftMinted(address,string,string,string,int256,uint256)
+        - event: NftMinted(address,string,string,string,uint256,uint256,uint256,uint256,uint256,uint256,string,string)
           handler: handleNftMinted
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
@@ -88,9 +92,8 @@ dataSources:
     name: VillageSquare
     network: mumbai
     source:
-      address: "0xf79DbBe121E52255aBdC884F7D3E47C8D1071ee5"
+      address: "0xb7CD2e4889aa8CC288D971aeb82F107594095dbd"
       abi: VillageSquare
-      startBlock: 29197793
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -113,7 +116,7 @@ dataSources:
           handler: handleAuctionContractUpdated
         - event: Deposited(indexed address,uint256)
           handler: handleDeposited
-        - event: DisputeReported(address,uint256,string,string,string)
+        - event: DisputeReported(address,uint256,string,string,string,bool)
           handler: handleDisputeReported
         - event: DisputeResolved(address,uint256,uint256)
           handler: handleDisputeResolved

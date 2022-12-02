@@ -86,8 +86,14 @@ export function createNftMintedEvent(
   title: string,
   description: string,
   digiURI: string,
-  amount: BigInt,
-  tokenId: BigInt
+  worth: BigInt,
+  tokenId: BigInt,
+  productAge: BigInt,
+  revenue: BigInt,
+  expenses: BigInt,
+  traffic: BigInt,
+  location: string,
+  productLink: string
 ): NftMinted {
   let nftMintedEvent = changetype<NftMinted>(newMockEvent())
 
@@ -109,12 +115,45 @@ export function createNftMintedEvent(
     new ethereum.EventParam("digiURI", ethereum.Value.fromString(digiURI))
   )
   nftMintedEvent.parameters.push(
-    new ethereum.EventParam("amount", ethereum.Value.fromSignedBigInt(amount))
+    new ethereum.EventParam("worth", ethereum.Value.fromUnsignedBigInt(worth))
   )
   nftMintedEvent.parameters.push(
     new ethereum.EventParam(
       "tokenId",
       ethereum.Value.fromUnsignedBigInt(tokenId)
+    )
+  )
+  nftMintedEvent.parameters.push(
+    new ethereum.EventParam(
+      "productAge",
+      ethereum.Value.fromUnsignedBigInt(productAge)
+    )
+  )
+  nftMintedEvent.parameters.push(
+    new ethereum.EventParam(
+      "revenue",
+      ethereum.Value.fromUnsignedBigInt(revenue)
+    )
+  )
+  nftMintedEvent.parameters.push(
+    new ethereum.EventParam(
+      "expenses",
+      ethereum.Value.fromUnsignedBigInt(expenses)
+    )
+  )
+  nftMintedEvent.parameters.push(
+    new ethereum.EventParam(
+      "traffic",
+      ethereum.Value.fromUnsignedBigInt(traffic)
+    )
+  )
+  nftMintedEvent.parameters.push(
+    new ethereum.EventParam("location", ethereum.Value.fromString(location))
+  )
+  nftMintedEvent.parameters.push(
+    new ethereum.EventParam(
+      "productLink",
+      ethereum.Value.fromString(productLink)
     )
   )
 

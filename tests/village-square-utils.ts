@@ -82,7 +82,8 @@ export function createDisputeReportedEvent(
   auctionId: BigInt,
   _message: string,
   _email: string,
-  _phone: string
+  _phone: string,
+  isSettled: boolean
 ): DisputeReported {
   let disputeReportedEvent = changetype<DisputeReported>(newMockEvent())
 
@@ -108,6 +109,9 @@ export function createDisputeReportedEvent(
   )
   disputeReportedEvent.parameters.push(
     new ethereum.EventParam("_phone", ethereum.Value.fromString(_phone))
+  )
+  disputeReportedEvent.parameters.push(
+    new ethereum.EventParam("isSettled", ethereum.Value.fromBoolean(isSettled))
   )
 
   return disputeReportedEvent

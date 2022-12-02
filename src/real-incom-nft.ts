@@ -1,4 +1,3 @@
-import { BigInt } from "@graphprotocol/graph-ts"
 import {
   RealIncomNftAccessControlContractUpdated as RealIncomNftAccessControlContractUpdatedEvent,
   Approval as ApprovalEvent,
@@ -7,9 +6,7 @@ import {
   Transfer as TransferEvent,
   RealIncomNft
 } from "../generated/RealIncomNft/RealIncomNft"
-import {
-  Digi, User
-} from "../generated/schema"
+import { Digi, User } from "../generated/schema"
 
 export function handleRealIncomNftAccessControlContractUpdated(
   event: RealIncomNftAccessControlContractUpdatedEvent
@@ -21,10 +18,6 @@ export function handleApproval(event: ApprovalEvent): void {
   
 }
 
-export function handleApprovalForAll(event: ApprovalForAllEvent): void {
-  
-}
-
 export function handleNftMinted(event: NftMintedEvent): void {
   let digi = Digi.load(
     event.params.tokenId.toHex()
@@ -33,15 +26,19 @@ export function handleNftMinted(event: NftMintedEvent): void {
   if (digi){
     digi.title = event.params.title
     digi.description = event.params.description
-    digi.worth = event.params.amount
+    digi.worth = event.params.worth
     digi.save()
   }
   
   let user = User.load(event.params.owner.toHexString())
   if (user) {
-    user.networth = event.params.amount
+    user.networth = event.params.worth
     user.save()
   }
+}
+
+export function handleApprovalForAll(event: ApprovalForAllEvent): void {
+  
 }
 
 export function handleTransfer(event: TransferEvent): void {

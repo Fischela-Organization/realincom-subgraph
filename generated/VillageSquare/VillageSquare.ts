@@ -108,6 +108,10 @@ export class DisputeReported__Params {
   get _phone(): string {
     return this._event.parameters[4].value.toString();
   }
+
+  get isSettled(): boolean {
+    return this._event.parameters[5].value.toBoolean();
+  }
 }
 
 export class DisputeResolved extends ethereum.Event {
@@ -180,6 +184,82 @@ export class Withdrawn__Params {
   }
 }
 
+export class VillageSquare__disputesResult {
+  value0: Address;
+  value1: Address;
+  value2: BigInt;
+  value3: string;
+  value4: string;
+  value5: string;
+  value6: BigInt;
+  value7: boolean;
+
+  constructor(
+    value0: Address,
+    value1: Address,
+    value2: BigInt,
+    value3: string,
+    value4: string,
+    value5: string,
+    value6: BigInt,
+    value7: boolean
+  ) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+    this.value3 = value3;
+    this.value4 = value4;
+    this.value5 = value5;
+    this.value6 = value6;
+    this.value7 = value7;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromAddress(this.value0));
+    map.set("value1", ethereum.Value.fromAddress(this.value1));
+    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
+    map.set("value3", ethereum.Value.fromString(this.value3));
+    map.set("value4", ethereum.Value.fromString(this.value4));
+    map.set("value5", ethereum.Value.fromString(this.value5));
+    map.set("value6", ethereum.Value.fromUnsignedBigInt(this.value6));
+    map.set("value7", ethereum.Value.fromBoolean(this.value7));
+    return map;
+  }
+
+  getSeller(): Address {
+    return this.value0;
+  }
+
+  getBuyer(): Address {
+    return this.value1;
+  }
+
+  getAuctionId(): BigInt {
+    return this.value2;
+  }
+
+  getMessageQuery(): string {
+    return this.value3;
+  }
+
+  getEmail(): string {
+    return this.value4;
+  }
+
+  getPhone(): string {
+    return this.value5;
+  }
+
+  getTime(): BigInt {
+    return this.value6;
+  }
+
+  getIsSettled(): boolean {
+    return this.value7;
+  }
+}
+
 export class VillageSquare extends ethereum.SmartContract {
   static bind(address: Address): VillageSquare {
     return new VillageSquare("VillageSquare", address);
@@ -248,6 +328,51 @@ export class VillageSquare extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  disputes(param0: BigInt): VillageSquare__disputesResult {
+    let result = super.call(
+      "disputes",
+      "disputes(uint256):(address,address,uint256,string,string,string,uint256,bool)",
+      [ethereum.Value.fromUnsignedBigInt(param0)]
+    );
+
+    return new VillageSquare__disputesResult(
+      result[0].toAddress(),
+      result[1].toAddress(),
+      result[2].toBigInt(),
+      result[3].toString(),
+      result[4].toString(),
+      result[5].toString(),
+      result[6].toBigInt(),
+      result[7].toBoolean()
+    );
+  }
+
+  try_disputes(
+    param0: BigInt
+  ): ethereum.CallResult<VillageSquare__disputesResult> {
+    let result = super.tryCall(
+      "disputes",
+      "disputes(uint256):(address,address,uint256,string,string,string,uint256,bool)",
+      [ethereum.Value.fromUnsignedBigInt(param0)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new VillageSquare__disputesResult(
+        value[0].toAddress(),
+        value[1].toAddress(),
+        value[2].toBigInt(),
+        value[3].toString(),
+        value[4].toString(),
+        value[5].toString(),
+        value[6].toBigInt(),
+        value[7].toBoolean()
+      )
+    );
   }
 
   owner(): Address {
@@ -351,7 +476,7 @@ export class DisputeCall__Inputs {
     return this._call.inputValues[0].value.toBigInt();
   }
 
-  get _message(): string {
+  get _messageQuery(): string {
     return this._call.inputValues[1].value.toString();
   }
 

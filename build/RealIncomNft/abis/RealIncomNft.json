@@ -108,15 +108,51 @@
       },
       {
         "indexed": false,
-        "internalType": "int256",
-        "name": "amount",
-        "type": "int256"
+        "internalType": "uint256",
+        "name": "worth",
+        "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "productAge",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "revenue",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "expenses",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "traffic",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "location",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "productLink",
+        "type": "string"
       }
     ],
     "name": "NftMinted",
@@ -201,6 +237,25 @@
     "inputs": [
       {
         "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "fetchNftValue",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
       }
@@ -255,6 +310,36 @@
       {
         "internalType": "string",
         "name": "_digiURI",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "productAge",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "monthlyRevenue",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "monthlyExpenses",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "monthlyTraffic",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "location",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "productLink",
         "type": "string"
       }
     ],
@@ -378,6 +463,35 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "seeNft",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "operator",
         "type": "address"
@@ -488,13 +602,43 @@
       },
       {
         "internalType": "uint256",
-        "name": "netWorth",
+        "name": "_worth",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
         "name": "_tokenId",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_productAge",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_revenue",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_expenses",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_traffic",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "location",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_productLink",
+        "type": "string"
       }
     ],
     "stateMutability": "view",
@@ -545,7 +689,7 @@
   {
     "inputs": [
       {
-        "internalType": "address",
+        "internalType": "contract RealIncomAccessControl",
         "name": "_accessController",
         "type": "address"
       }

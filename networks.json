@@ -1,13 +1,19 @@
 {
   "mumbai": {
     "RealIncomAuction": {
-      "address": "0x5d3648C8088cD3951F71Ce2c31ffaba43ba1aBFB"
-    },
-    "RealIncomNft": {
-      "address": "0x2Cdb125180A315afd2926850b56616AdADBa840B"
+      "address": "0xDCC3713d5743d13d41C2a1Bf550188A635E7790f"
     },
     "VillageSquare": {
-      "address": "0xf79DbBe121E52255aBdC884F7D3E47C8D1071ee5"
+      "address": "0xb7CD2e4889aa8CC288D971aeb82F107594095dbd"
+    },
+    "RealIncomNft": {
+      "address": "0xd54765ccB13FDeb047276E2F85AF75B99680Ba23"
+    },
+    "RealIncomLoan": {
+      "address": "0x565282ce2b73c5fafa19caa6f26fb21c6068e1be"
+    },
+    "RealIncomAccessControl": {
+      "address": "0x93353507af4eD824E95D0fe57BeA183f7C218e59"
     }
   }
 }

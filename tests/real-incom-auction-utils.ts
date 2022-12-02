@@ -11,6 +11,8 @@ import {
   BidPlaced,
   NFTContractUpdated,
   OwnershipTransferred,
+  ResultsConfirmed,
+  ValueReceived,
   ValueSent
 } from "../generated/RealIncomAuction/RealIncomAuction"
 
@@ -90,16 +92,27 @@ export function createAuctionCancelledEvent(
 }
 
 export function createAuctionCreatedEvent(
+  auctionId: BigInt,
   tokenId: BigInt,
   startTime: BigInt,
   reservedPrice: BigInt,
+  intergrityConfirmed: boolean,
+  resulted: boolean,
   endTime: BigInt,
-  seller: Address
+  seller: Address,
+  isOnSale: boolean,
+  sellType: string
 ): AuctionCreated {
   let auctionCreatedEvent = changetype<AuctionCreated>(newMockEvent())
 
   auctionCreatedEvent.parameters = new Array()
 
+  auctionCreatedEvent.parameters.push(
+    new ethereum.EventParam(
+      "auctionId",
+      ethereum.Value.fromUnsignedBigInt(auctionId)
+    )
+  )
   auctionCreatedEvent.parameters.push(
     new ethereum.EventParam(
       "tokenId",
@@ -120,12 +133,27 @@ export function createAuctionCreatedEvent(
   )
   auctionCreatedEvent.parameters.push(
     new ethereum.EventParam(
+      "intergrityConfirmed",
+      ethereum.Value.fromBoolean(intergrityConfirmed)
+    )
+  )
+  auctionCreatedEvent.parameters.push(
+    new ethereum.EventParam("resulted", ethereum.Value.fromBoolean(resulted))
+  )
+  auctionCreatedEvent.parameters.push(
+    new ethereum.EventParam(
       "endTime",
       ethereum.Value.fromUnsignedBigInt(endTime)
     )
   )
   auctionCreatedEvent.parameters.push(
     new ethereum.EventParam("seller", ethereum.Value.fromAddress(seller))
+  )
+  auctionCreatedEvent.parameters.push(
+    new ethereum.EventParam("isOnSale", ethereum.Value.fromBoolean(isOnSale))
+  )
+  auctionCreatedEvent.parameters.push(
+    new ethereum.EventParam("sellType", ethereum.Value.fromString(sellType))
   )
 
   return auctionCreatedEvent
@@ -170,9 +198,12 @@ export function createAuctionEndTimeModifiedEvent(
 
 export function createAuctionResultedEvent(
   seller: Address,
+  buyer: Address,
   winner: Address,
   winningBid: BigInt,
-  endTime: BigInt
+  endTime: BigInt,
+  auctionId: BigInt,
+  tokenId: BigInt
 ): AuctionResulted {
   let auctionResultedEvent = changetype<AuctionResulted>(newMockEvent())
 
@@ -180,6 +211,9 @@ export function createAuctionResultedEvent(
 
   auctionResultedEvent.parameters.push(
     new ethereum.EventParam("seller", ethereum.Value.fromAddress(seller))
+  )
+  auctionResultedEvent.parameters.push(
+    new ethereum.EventParam("buyer", ethereum.Value.fromAddress(buyer))
   )
   auctionResultedEvent.parameters.push(
     new ethereum.EventParam("winner", ethereum.Value.fromAddress(winner))
@@ -194,6 +228,18 @@ export function createAuctionResultedEvent(
     new ethereum.EventParam(
       "endTime",
       ethereum.Value.fromUnsignedBigInt(endTime)
+    )
+  )
+  auctionResultedEvent.parameters.push(
+    new ethereum.EventParam(
+      "auctionId",
+      ethereum.Value.fromUnsignedBigInt(auctionId)
+    )
+  )
+  auctionResultedEvent.parameters.push(
+    new ethereum.EventParam(
+      "tokenId",
+      ethereum.Value.fromUnsignedBigInt(tokenId)
     )
   )
 
@@ -240,7 +286,9 @@ export function createAuctionStartTimeModifiedEvent(
 export function createBidPlacedEvent(
   BidAmount: BigInt,
   Bidder: Address,
-  bidTime: BigInt
+  bidTime: BigInt,
+  auctionId: BigInt,
+  tokenId: BigInt
 ): BidPlaced {
   let bidPlacedEvent = changetype<BidPlaced>(newMockEvent())
 
@@ -259,6 +307,18 @@ export function createBidPlacedEvent(
     new ethereum.EventParam(
       "bidTime",
       ethereum.Value.fromUnsignedBigInt(bidTime)
+    )
+  )
+  bidPlacedEvent.parameters.push(
+    new ethereum.EventParam(
+      "auctionId",
+      ethereum.Value.fromUnsignedBigInt(auctionId)
+    )
+  )
+  bidPlacedEvent.parameters.push(
+    new ethereum.EventParam(
+      "tokenId",
+      ethereum.Value.fromUnsignedBigInt(tokenId)
     )
   )
 
@@ -307,6 +367,60 @@ export function createOwnershipTransferredEvent(
   )
 
   return ownershipTransferredEvent
+}
+
+export function createResultsConfirmedEvent(
+  seller: Address,
+  buyer: Address,
+  isOnsale: boolean,
+  intergrityConfirmed: boolean,
+  tokenId: BigInt
+): ResultsConfirmed {
+  let resultsConfirmedEvent = changetype<ResultsConfirmed>(newMockEvent())
+
+  resultsConfirmedEvent.parameters = new Array()
+
+  resultsConfirmedEvent.parameters.push(
+    new ethereum.EventParam("seller", ethereum.Value.fromAddress(seller))
+  )
+  resultsConfirmedEvent.parameters.push(
+    new ethereum.EventParam("buyer", ethereum.Value.fromAddress(buyer))
+  )
+  resultsConfirmedEvent.parameters.push(
+    new ethereum.EventParam("isOnsale", ethereum.Value.fromBoolean(isOnsale))
+  )
+  resultsConfirmedEvent.parameters.push(
+    new ethereum.EventParam(
+      "intergrityConfirmed",
+      ethereum.Value.fromBoolean(intergrityConfirmed)
+    )
+  )
+  resultsConfirmedEvent.parameters.push(
+    new ethereum.EventParam(
+      "tokenId",
+      ethereum.Value.fromUnsignedBigInt(tokenId)
+    )
+  )
+
+  return resultsConfirmedEvent
+}
+
+export function createValueReceivedEvent(
+  sender: Address,
+  value: BigInt
+): ValueReceived {
+  let valueReceivedEvent = changetype<ValueReceived>(newMockEvent())
+
+  valueReceivedEvent.parameters = new Array()
+
+  valueReceivedEvent.parameters.push(
+    new ethereum.EventParam("sender", ethereum.Value.fromAddress(sender))
+  )
+  valueReceivedEvent.parameters.push(
+    new ethereum.EventParam("value", ethereum.Value.fromUnsignedBigInt(value))
+  )
+
+  return valueReceivedEvent
 }
 
 export function createValueSentEvent(to: Address, val: BigInt): ValueSent {
