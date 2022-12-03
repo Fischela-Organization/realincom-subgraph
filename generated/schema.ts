@@ -516,6 +516,108 @@ export class Digi extends Entity {
       this.set("worth", Value.fromBigInt(<BigInt>value));
     }
   }
+
+  get productAge(): BigInt | null {
+    let value = this.get("productAge");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set productAge(value: BigInt | null) {
+    if (!value) {
+      this.unset("productAge");
+    } else {
+      this.set("productAge", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get monthlyExpenses(): BigInt | null {
+    let value = this.get("monthlyExpenses");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set monthlyExpenses(value: BigInt | null) {
+    if (!value) {
+      this.unset("monthlyExpenses");
+    } else {
+      this.set("monthlyExpenses", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get monthlyRevenue(): BigInt | null {
+    let value = this.get("monthlyRevenue");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set monthlyRevenue(value: BigInt | null) {
+    if (!value) {
+      this.unset("monthlyRevenue");
+    } else {
+      this.set("monthlyRevenue", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get monthlyTraffic(): BigInt | null {
+    let value = this.get("monthlyTraffic");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set monthlyTraffic(value: BigInt | null) {
+    if (!value) {
+      this.unset("monthlyTraffic");
+    } else {
+      this.set("monthlyTraffic", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get location(): string | null {
+    let value = this.get("location");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set location(value: string | null) {
+    if (!value) {
+      this.unset("location");
+    } else {
+      this.set("location", Value.fromString(<string>value));
+    }
+  }
+
+  get productLink(): string | null {
+    let value = this.get("productLink");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set productLink(value: string | null) {
+    if (!value) {
+      this.unset("productLink");
+    } else {
+      this.set("productLink", Value.fromString(<string>value));
+    }
+  }
 }
 
 export class Loan extends Entity {

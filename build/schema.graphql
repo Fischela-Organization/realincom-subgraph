@@ -36,6 +36,12 @@ type Digi @entity {
   title: String
   description: String
   worth: BigInt
+  productAge: BigInt
+  monthlyExpenses: BigInt
+  monthlyRevenue: BigInt
+  monthlyTraffic: BigInt
+  location: String
+  productLink: String
 }
 
 type Loan @entity {
