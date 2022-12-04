@@ -54,32 +54,54 @@ RealIncom is an NFT market for digital assets, In this marketplace Digital asset
 - 5 Replace your <ACCESS_TOKEN>, <GITHUB_USER>, <SUBGRAPH NAME> respectively
 
 ##### SMART CONTRACT
-- 1. clone this repo "git clone https://github.com/Fischela-Organization/realincom-subgraph.git"
+- 1. clone this repo "git clone https://github.com/Fischela-Organization/real-income-smartcontract.git"
 - 2. run => "yarn"
+- 3. to compile run "yarn hardhat compile"
+- 4. to deploy to local run "yarn hardhat run scripts/deploy.ts"
+- 5. Deploy to polygon with the command "arn hardhat run scripts/deploy.ts --network matic"
+- 6. Contract addresses of the six contracts would be written to /addresses.json
 
 ##### FRONTEND(NEXTJS)
 - 1. clone this repo "git clone  https://github.com/Fischela-Organization/real-incom-frontend.git"
 - 2. run => "yarn"
 - 3. run => "npm run dev or yarn dev" to start developement server
 - 4. if you are deploying to another chain other than polygon replace the contract addresses and abis in the /Artifacts Directory
-- 5. create a .env file and add NEXT_PUBLIC_WEB_3_STORAGE_ACCESS_TOKEN get an access token from https://web3.storage
+- 5. create a .env file and add keys from env.example get an access token from https://web3.storage and subgraphs graphql client URI from https://thegraph.com/hosted-service/subgraph/norvirae/realincom-subgraph
 - 6. you are good to go
 
 #### HOW TO USE THIS PROJECT:
+###### Frontend
 The NFT marketplace Auction Features(Mint Digital asset, start auction, place a bid, cancel auction, result auction, confirm results) features have been hooked to the frontend and the UI's to call this functions are ready with error handlers
 
+###### Smart contract
 you can test out other smart contract features here at the address manager (<a href="https://mumbai.polygonscan.com/address/0xB5c2b379d7C397B617B91367D2e8396274B4ebC8#writeContract">Smart contract address manager</a>) you can navigate to the read section, the contract addresses of (Auction, accesscontrols, village square, loan, nft) contract to get a feel of the backend build.
 
 I and my team would make it functional within a short time.
+
+###### Subgraph
+You can play around with realincom data on thegraph protocol from here: https://thegraph.com/hosted-service/subgraph/norvirae/realincom-subgraph
+
+You can also consume from your graphql frontend application with client ID: https://api.thegraph.com/subgraphs/name/norvirae/realincom-subgraph
+
+#### FUTURE INTEGRATIONS
+- implement Loan marketplace(Frontend)
+- Implement Disputes(Frontend)
+- Implement Breeding system with spines-ts
+- Add KYC support
+- Strengthen smart contract security reintroduce re-entrancy guard and more bug hunting and code auditing
+- Launch to mainnet
+- Start entertaining real actual users.
+- Introduce 2.5% percentage cut for every nft purchased and loan paid back to loaner
 
 
 #### HOW TO CONTRIBUTE TO THE PROJECT:
 send me an email: norbertmbafrank@gmail.com or chat me on whatsapp: +2347025488825
 follow realincom on instagram: https://www.instagram.com/realincomagency
+see live project: https://www.realincom.com
 
 
 #### CREDITS:
-    credits to christef at https://github.com/chrisstef for the base react frontend which i converted to a typescript nextjs project for SEO purposes. 
+    credits to chrisstef at https://github.com/chrisstef for the base react frontend which I converted to a typescript nextjs project for SEO purposes. 
 
 #### What was your motivation?
 
@@ -105,5 +127,5 @@ but what if a user would want to actually invest the money and make gains off th
 It simply tied NFT's to real value that generates passive or active income, that can in turn be used for decentralised collateral for loans.
 
 #### What makes this project stand out?
-From my research this project is the first in the web3 space that tries to solve a problem in this way, collateralizing digital assets with value tied to NFT's.
+From my research this project is the first in the web3 space that tries to solve a problem in this way, collateralizing digital assets with real value tied to NFT's with income generation.
 
