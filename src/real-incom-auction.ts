@@ -115,7 +115,11 @@ export function handleAuctionResulted(event: AuctionResultedEvent): void {
   digiSale.isOnSale = false
   digiSale.auctionResulted = true
   digiSale.save()
-
+  const modifyDigi = Digi.load(event.params.tokenId.toHex())
+  if (modifyDigi){
+    modifyDigi.worth = event.params.winningBid
+    modifyDigi.save()
+  }
 }
 
 export function handleAuctionStartTimeModified(
@@ -132,14 +136,16 @@ export function handleAuctionStartTimeModified(
 export function handleBidPlaced(event: BidPlacedEvent): void {
   const modifyDigisale = DigiSale.load(event.address.toHex() + "-" + event.params.auctionId.toHex())
   if(modifyDigisale){
-    const modifyDigi = Digi.load(event.params.tokenId.toHex())
-    if (modifyDigi){
-      modifyDigi.worth = event.params.BidAmount
-    }
+    
     modifyDigisale.amount = event.params.BidAmount
     modifyDigisale.save()
   }
-  
+
+  const modifyDigi = Digi.load(event.params.tokenId.toHex())
+  if (modifyDigi){
+    modifyDigi.worth = event.params.BidAmount
+    modifyDigi.save()
+  }
 }
 
 export function handleNFTContractUpdated(event: NFTContractUpdatedEvent): void {
