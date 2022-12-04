@@ -132,7 +132,7 @@ export function handleAuctionStartTimeModified(
 export function handleBidPlaced(event: BidPlacedEvent): void {
   const modifyDigisale = DigiSale.load(event.address.toHex() + "-" + event.params.auctionId.toHex())
   if(modifyDigisale){
-    const modifyDigi = Digi.load(modifyDigisale.digi)
+    const modifyDigi = Digi.load(event.params.tokenId.toHex())
     if (modifyDigi){
       modifyDigi.worth = event.params.BidAmount
     }
