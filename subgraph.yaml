@@ -6,9 +6,9 @@ dataSources:
     name: RealIncomAuction
     network: mumbai
     source:
-      address: "0xDCC3713d5743d13d41C2a1Bf550188A635E7790f"
+      address: "0x2529610773B4Edc9296B416Ee5013afBe61E525d"
       abi: RealIncomAuction
-      startBlock: 29450119
+      startBlock: 29481668
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6

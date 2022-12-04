@@ -162,6 +162,24 @@ export class DigiSale extends Entity {
     }
   }
 
+  get auctionResulted(): boolean {
+    let value = this.get("auctionResulted");
+    return value!.toBoolean();
+  }
+
+  set auctionResulted(value: boolean) {
+    this.set("auctionResulted", Value.fromBoolean(value));
+  }
+
+  get intergrityConfirmed(): boolean {
+    let value = this.get("intergrityConfirmed");
+    return value!.toBoolean();
+  }
+
+  set intergrityConfirmed(value: boolean) {
+    this.set("intergrityConfirmed", Value.fromBoolean(value));
+  }
+
   get seller(): string | null {
     let value = this.get("seller");
     if (!value || value.kind == ValueKind.NULL) {

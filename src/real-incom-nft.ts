@@ -30,7 +30,7 @@ export function handleNftMinted(event: NftMintedEvent): void {
     digi.location = event.params.location
     digi.productAge = event.params.productAge
     digi.monthlyExpenses = event.params.expenses
-    digi.monthlyRevenue = event.params.expenses
+    digi.monthlyRevenue = event.params.revenue
     digi.monthlyTraffic = event.params.traffic
     digi.productLink = event.params.productLink
     digi.save()

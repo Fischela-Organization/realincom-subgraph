@@ -57,7 +57,7 @@ export function handleAuctionCancelled(event: AuctionCancelledEvent): void {
 
   const digi = Digi.load(event.params.tokenId.toHex())
   if(digi){
-    digi.isOnSale = true
+    digi.isOnSale = false
     digi.save()
   }
 }
@@ -72,9 +72,12 @@ export function handleAuctionCreated(event: AuctionCreatedEvent): void {
   const digiSale = new DigiSale(event.address.toHex() + "-" + event.params.auctionId.toHex())
   digiSale.amount = event.params.reservedPrice
   digiSale.buyer = null
+  digiSale.auctionId = event.params.auctionId.toString()
   digiSale.isOnSale = true
   digiSale.endTime = event.params.endTime
   digiSale.duration = event.block.timestamp
+  digiSale.auctionResulted = event.params.resulted
+  digiSale.intergrityConfirmed = event.params.intergrityConfirmed
   digiSale.startTime = event.params.startTime
   digiSale.seller = event.transaction.from.toHexString()
   digiSale.digi = event.params.tokenId.toHex()
@@ -110,6 +113,7 @@ export function handleAuctionResulted(event: AuctionResultedEvent): void {
   const digiSale = new DigiSale(event.address.toHex() + "-" + event.params.winner.toHex())
   digiSale.buyer = event.params.winner.toHexString()
   digiSale.isOnSale = false
+  digiSale.auctionResulted = true
   digiSale.save()
 
 }
@@ -135,7 +139,6 @@ export function handleBidPlaced(event: BidPlacedEvent): void {
     modifyDigisale.amount = event.params.BidAmount
     modifyDigisale.save()
   }
-
   
 }
 

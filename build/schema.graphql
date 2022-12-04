@@ -9,6 +9,8 @@ type DigiSale @entity {
   endTime: BigInt
   duration: BigInt
   buyer: User
+  auctionResulted: Boolean
+  intergrityConfirmed: Boolean
   seller: User
 }
 
